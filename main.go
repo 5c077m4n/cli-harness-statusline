@@ -233,6 +233,8 @@ func readPayload() Payload {
 }
 
 func main() {
+	color.NoColor = false
+
 	data := readPayload()
 	segments := []string{
 		modelSegment(data),
