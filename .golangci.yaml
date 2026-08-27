@@ -1,0 +1,15 @@
+---
+version: "2"
+
+linters:
+  enable:
+    - revive
+  settings:
+    revive:
+      rules:
+        - name: unused-parameter
+          severity: warning
+          disabled: false
+          exclude: [""]
+          arguments:
+            - allowRegex: "^_"
