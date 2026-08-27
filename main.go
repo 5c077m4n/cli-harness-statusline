@@ -39,41 +39,37 @@ var (
 	branchRegex = regexp.MustCompile(`^(?:No commits yet on )?([^\.\n]+)`)
 )
 
-type ModelInfo struct {
-	DisplayName string `json:"display_name"`
-	MaxMode     bool   `json:"max_mode"`
-}
-
-type WorkspaceInfo struct {
-	CurrentDir string `json:"current_dir"`
-}
-
-type WorktreeInfo struct {
-	Name string `json:"name"`
-}
-
-type ContextWindow struct {
-	UsedPercentage float64 `json:"used_percentage"`
-}
-
-type CostInfo struct {
-	TotalCostUSD *float64 `json:"total_cost_usd"`
-}
-
-type VimInfo struct {
-	Mode string `json:"mode"`
-}
-
-type Payload struct {
-	Cwd       string        `json:"cwd"`
-	Autorun   bool          `json:"autorun"`
-	Model     ModelInfo     `json:"model"`
-	Workspace WorkspaceInfo `json:"workspace"`
-	Worktree  WorktreeInfo  `json:"worktree"`
-	Context   ContextWindow `json:"context_window"`
-	Cost      CostInfo      `json:"cost"`
-	Vim       VimInfo       `json:"vim"`
-}
+type (
+	ModelInfo struct {
+		DisplayName string `json:"display_name"`
+		MaxMode     bool   `json:"max_mode"`
+	}
+	WorkspaceInfo struct {
+		CurrentDir string `json:"current_dir"`
+	}
+	WorktreeInfo struct {
+		Name string `json:"name"`
+	}
+	ContextWindowInfo struct {
+		UsedPercentage float64 `json:"used_percentage"`
+	}
+	CostInfo struct {
+		TotalCostUSD *float64 `json:"total_cost_usd"`
+	}
+	VimInfo struct {
+		Mode string `json:"mode"`
+	}
+	Payload struct {
+		Cwd           string            `json:"cwd"`
+		Autorun       bool              `json:"autorun"`
+		Model         ModelInfo         `json:"model"`
+		Workspace     WorkspaceInfo     `json:"workspace"`
+		Worktree      WorktreeInfo      `json:"worktree"`
+		ContextWindow ContextWindowInfo `json:"context_window"`
+		Cost          CostInfo          `json:"cost"`
+		Vim           VimInfo           `json:"vim"`
+	}
+)
 
 func termSep() string {
 	return colorGray.Sprint(" | ")
@@ -170,7 +166,7 @@ func worktreeSegment(data Payload) string {
 }
 
 func contextSegment(data Payload) string {
-	percent := math.Floor(data.Context.UsedPercentage)
+	percent := math.Floor(data.ContextWindow.UsedPercentage)
 	filled := int(math.Min(10, math.Max(0, math.Floor(percent/10))))
 
 	selectedColor := colorGreen
