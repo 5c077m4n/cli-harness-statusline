@@ -15,13 +15,6 @@ curl -sL https://raw.githubusercontent.com/5c077m4n/cursor-agent-statusline/mast
 > Always inspect scripts before piping them into your shell. You can review
 > [install.sh](./install.sh) first.
 
-This will:
-
-- Install the binary via `go install` if Go is found, or download a pre-built
-  release otherwise
-- Automatically configure the statusline in `~/.config/cursor/cli-config.json`
-  and/or `~/.config/claude/settings.json` (whichever exist) using `jq`
-
 ## Configuration
 
 The statusline is configured via
