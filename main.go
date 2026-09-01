@@ -27,11 +27,14 @@ func initLog() {
 		return
 	}
 
-	f, err := os.OpenFile(
-		filepath.Join(logDir, "statusline.log"),
-		os.O_APPEND|os.O_CREATE|os.O_WRONLY,
-		0644,
-	)
+	logPath := filepath.Join(logDir, "statusline.log")
+	const maxSize = 10 << 20 // 10 MB
+
+	if fileStats, err := os.Stat(logPath); err == nil && fileStats.Size() > maxSize {
+		_ = os.Remove(logPath)
+	}
+
+	f, err := os.OpenFile(logPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return
 	}
