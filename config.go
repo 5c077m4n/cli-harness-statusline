@@ -72,6 +72,17 @@ type Config struct {
 	Padding  Padding        `json:"padding"`
 }
 
+func configDir() string {
+	if dir := os.Getenv("XDG_CONFIG_HOME"); dir != "" {
+		return filepath.Join(dir, "cursor-agent-statusline")
+	}
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return ""
+	}
+	return filepath.Join(home, ".config", "cursor-agent-statusline")
+}
+
 func loadConfig() *Config {
 	cfg := &Config{
 		Segments: SegmentsConfig{
@@ -97,12 +108,12 @@ func loadConfig() *Config {
 		},
 	}
 
-	home, err := os.UserHomeDir()
-	if err != nil {
+	dir := configDir()
+	if dir == "" {
 		return cfg
 	}
 
-	path := filepath.Join(home, ".config", "cursor-agent-statusline", "config.json")
+	path := filepath.Join(dir, "config.json")
 	k := koanf.New(".")
 	if err := k.Load(file.Provider(path), json.Parser()); err != nil {
 		return cfg
