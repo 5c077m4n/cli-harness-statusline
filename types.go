@@ -41,8 +41,8 @@ type (
 	}
 	CostInfo struct {
 		TotalCostUSD       *float64 `json:"total_cost_usd"`
-		TotalDurationMs    int64    `json:"total_duration_ms"`
-		TotalApiDurationMs int64    `json:"total_api_duration_ms"`
+		TotalDurationMs    float64  `json:"total_duration_ms"`
+		TotalApiDurationMs float64  `json:"total_api_duration_ms"`
 		TotalLinesAdded    int      `json:"total_lines_added"`
 		TotalLinesRemoved  int      `json:"total_lines_removed"`
 	}

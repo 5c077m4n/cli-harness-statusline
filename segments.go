@@ -169,7 +169,7 @@ func costSegment(cfg *Config, data Payload) string {
 	segment := colorDim.Sprintf("%s $%.2f", cfg.Segments.Cost.Icon, *data.Cost.TotalCostUSD)
 
 	if data.Cost.TotalDurationMs > 0 {
-		totalSecs := data.Cost.TotalDurationMs / 1000
+		totalSecs := int64(data.Cost.TotalDurationMs / 1000)
 		mins := totalSecs / 60
 		secs := totalSecs % 60
 		segment += colorDim.Sprintf(" %s%dm%ds", cfg.Segments.Cost.DurationIcon, mins, secs)
