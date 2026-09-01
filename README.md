@@ -30,50 +30,31 @@ omitted field falls back to its default.
 
 ```json
 {
-  "toggles": {
-    "model": true, // Show current AI model name
-    "folder": true, // Show working directory name
-    "git": true, // Show git branch and dirty state
-    "worktree": true, // Show git worktree name
-    "pr": true, // Show PR number and review state
-    "agent": true, // Show active agent name
-    "session": true, // Show session name (truncated)
-    "context": true, // Show context usage bar and percentage
-    "cost": true, // Show total cost and duration
-    "token": true, // Show input/output token counts
-    "cache": true, // Show cache status and hit ratio
-    "vim": true, // Show vim INSERT/NORMAL mode
-    "autorun": true, // Show "auto" when autorun enabled
-    "max": true, // Show "max" when max mode enabled
-    "fastMode": true, // Show "fast" when fast mode enabled
-    "effort": true, // Show effort level
-    "thinking": true, // Show "think" when thinking enabled
-    "rateLimit": true, // Show rate limit usage percentages
-    "exceeds": true // Show 200k+ context warning marker
-  },
-  "icons": {
-    "model": "󰚩",
-    "folder": "󰉋",
-    "branch": "󰊢",
-    "worktree": "󰙅",
-    "context": "󰧑",
-    "cost": "󰆛",
-    "vimInsert": "󰏫",
-    "vimNormal": "󰌌",
-    "autorun": "󰄙",
-    "max": "󰓅",
-    "session": "󰋩",
-    "fastMode": "󰑤",
-    "effort": "󰗡",
-    "thinking": "󰜗",
-    "duration": "󰥔",
-    "lines": "󰆓",
-    "pr": "󰐃",
-    "agent": "󰀈",
-    "rateLimit": "󰩯",
-    "cache": "󰚩",
-    "tokens": "󰹑",
-    "exceeds": "󰄘"
+  "segments": {
+    "model": { "disable": false, "icon": "󰚩" }, // Show current AI model name
+    "folder": { "disable": false, "icon": "󰉋" }, // Show working directory name
+    "git": { "disable": false, "icon": "󰊢", "branch": "󰊢" }, // Show git branch and dirty state
+    "worktree": { "disable": false, "icon": "󰙅" }, // Show git worktree name
+    "pr": { "disable": false, "icon": "󰐃" }, // Show PR number and review state
+    "agent": { "disable": false, "icon": "󰀈" }, // Show active agent name
+    "session": { "disable": false, "icon": "󰋩" }, // Show session name (truncated)
+    "context": { "disable": false, "icon": "󰧑" }, // Show context usage bar and percentage
+    "cost": { "disable": false, "icon": "󰆛", "duration": "󰥔", "lines": "󰆓" }, // Show total cost, duration, lines
+    "token": { "disable": false, "icon": "󰹑", "tokens": "󰹑" }, // Show input/output token counts
+    "cache": { "disable": false, "icon": "󰚩" }, // Show cache status and hit ratio
+    "vim": {
+      "disable": false,
+      "icon": "󰌌",
+      "iconInsert": "󰏫",
+      "iconNormal": "󰌌"
+    }, // Show vim INSERT/NORMAL mode
+    "autorun": { "disable": false, "icon": "󰄙" }, // Show "auto" when autorun enabled
+    "max": { "disable": false, "icon": "󰓅" }, // Show "max" when max mode enabled
+    "fastMode": { "disable": false, "icon": "󰑤" }, // Show "fast" when fast mode enabled
+    "effort": { "disable": false, "icon": "󰗡" }, // Show effort level
+    "thinking": { "disable": false, "icon": "󰜗" }, // Show "think" when thinking enabled
+    "rateLimit": { "disable": false, "icon": "󰩯" }, // Show rate limit usage percentages
+    "exceeds": { "disable": false, "icon": "󰄘" } // Show 200k+ context warning marker
   }
 }
 ```
