@@ -1,7 +1,8 @@
 # Cursor (CLI) Agent Statusline
 
 A minimal and functional statusline for
-[Cursor (CLI) Agnet](https://cursor.com/cli)
+[Cursor (CLI) Agnet](https://cursor.com/cli) &
+[Claude Code](https://claude.com/product/claude-code)
 
 ## Installation + usage
 
