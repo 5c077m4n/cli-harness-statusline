@@ -22,24 +22,11 @@ This will:
 - Automatically configure the statusline in `~/.config/cursor/cli-config.json`
   and/or `~/.config/claude/settings.json` (whichever exist) using `jq`
 
-### Manual steps (if you prefer to do it yourself)
-
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "<value of $CURSOR_CONFIG - cursor does not expand env vars>/cursor-agent-statusline"
-  }
-}
-```
-
-> Replace `$CURSOR_CONFIG` above with the actual path (`~/.config/cursor` by
-> default).
-
 ## Configuration
 
-The statusline is configured via `~/.config/cursor-agent-statusline/config.json`.
-All fields are optional — any omitted field falls back to its default.
+The statusline is configured via
+`~/.config/cursor-agent-statusline/config.json`. All fields are optional — any
+omitted field falls back to its default.
 
 ```json
 {
