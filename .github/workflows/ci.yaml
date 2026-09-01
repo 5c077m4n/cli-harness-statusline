@@ -55,11 +55,17 @@ jobs:
           go-version-file: "go.mod"
           cache: true
 
-      - name: Run benchmarks
+      - name: Run benchmarks (full render mean time)
         run: |
-          echo $'# Benchmarks\n| Benchmark | Iterations | Time/op | Bytes/op | Allocs/op |\n|---|---|---|---|---|' > bench_summary.md
-          go test -bench=. -benchmem -count=1 -timeout 120s ./... 2>&1 | awk '
-            /^Benchmark/ {printf "| %s | %s | %s | %s | %s |\n", $1, $2, $3, $4, $5 >> "bench_summary.md"}
-            /^ok[[:space:]]/ {total = $NF; pkg = $2; printf "\n**%s** total: %s\n", pkg, total >> "bench_summary.md"}
+          echo $'# Benchmarks\n| Benchmark | Iterations | Mean Time/op | Bytes/op | Allocs/op |\n|---|---|---|---|---|' > bench_summary.md
+          go test -bench='BenchmarkMain$' -benchmem -count=10 -timeout 120s ./... 2>&1 | awk '
+            /^Benchmark/ {
+              lines[NR] = sprintf("| %s | %s | %s | %s | %s |", $1, $2, $3, $4, $5)
+            }
+            /^ok[[:space:]]/ {total = $NF; pkg = $2}
+            END {
+              for (i in lines) print lines[i] >> "bench_summary.md"
+              printf "\n**%s** total: %s\n", pkg, total >> "bench_summary.md"
+            }
           '
           cat bench_summary.md >> $GITHUB_STEP_SUMMARY

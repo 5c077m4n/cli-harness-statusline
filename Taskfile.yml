@@ -9,6 +9,10 @@ tasks:
     desc: Run all benchmarks
     cmd: go test -bench=. -benchmem -count=1 -timeout 120s ./...
 
+  bench-mean:
+    desc: Run full-render benchmark 10 times and report mean time
+    cmd: go test -bench='BenchmarkMain$' -benchmem -count=10 -timeout 120s ./...
+
   bench-cpu:
     desc: Run benchmarks with CPU profiling
     cmd: go test -bench=. -benchmem -count=1 -timeout 120s -cpuprofile=cpu.out ./...
