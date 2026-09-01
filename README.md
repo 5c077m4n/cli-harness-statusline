@@ -55,7 +55,11 @@ omitted field falls back to its default.
     "thinking": { "disable": false, "icon": "󰜗" }, // Show "think" when thinking enabled
     "rateLimit": { "disable": false, "icon": "󰩯" }, // Show rate limit usage percentages
     "exceeds": { "disable": false, "icon": "󰄘" } // Show 200k+ context warning marker
-  }
+  },
+  "padding": {
+    "top": 1,
+    "bottom": 1
+  } // Number of blank lines above/below the statusline (default: 0)
 }
 ```
 
