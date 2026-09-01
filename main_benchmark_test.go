@@ -13,8 +13,8 @@ func BenchmarkFullAssembly(b *testing.B) {
 		Model:         ModelInfo{DisplayName: "claude-sonnet-4-20250514", MaxMode: false},
 		Workspace:     WorkspaceInfo{CurrentDir: "/home/user/my-project"},
 		Worktree:      WorktreeInfo{Name: "feature-x"},
-		ContextWindow: ContextWindowInfo{UsedPercentage: 42.5},
-		Cost:          CostInfo{TotalCostUSD: ptr(0.05)},
+		ContextWindow: ContextWindowInfo{UsedPercentage: new(42.5)},
+		Cost:          CostInfo{TotalCostUSD: new(float64)},
 		Vim:           VimInfo{Mode: "INSERT"},
 	}
 
