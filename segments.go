@@ -36,7 +36,7 @@ func termSep() string {
 }
 
 func gitInfo(directory string) (string, bool) {
-	cmd := exec.Command("git", "-C", directory, "status", "--porcelain", "-b")
+	cmd := exec.Command("git", "-C", directory, "status", "--branch", "--porcelain")
 	outputBytes, err := cmd.Output()
 	if err != nil {
 		return "", false
@@ -72,7 +72,7 @@ func gitInfo(directory string) (string, bool) {
 }
 
 func modelSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Model {
+	if cfg.Segments.Model.Disable {
 		return ""
 	}
 	name := data.Model.DisplayName
@@ -82,11 +82,11 @@ func modelSegment(cfg *Config, data Payload) string {
 	if name == "" {
 		name = "unknown"
 	}
-	return colorBlue.Add(color.Bold).Sprintf("%s %s", cfg.Icons.Model, name)
+	return colorBlue.Add(color.Bold).Sprintf("%s %s", cfg.Segments.Model.Icon, name)
 }
 
 func folderSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Folder {
+	if cfg.Segments.Folder.Disable {
 		return ""
 	}
 	directory := data.Workspace.CurrentDir
@@ -102,11 +102,11 @@ func folderSegment(cfg *Config, data Payload) string {
 		folder = "/"
 	}
 
-	return colorDim.Sprintf("%s %s", cfg.Icons.Folder, folder)
+	return colorDim.Sprintf("%s %s", cfg.Segments.Folder.Icon, folder)
 }
 
 func gitSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Git {
+	if cfg.Segments.Git.Disable {
 		return ""
 	}
 	directory := data.Workspace.CurrentDir
@@ -122,7 +122,7 @@ func gitSegment(cfg *Config, data Payload) string {
 		return ""
 	}
 
-	segment := colorMagenta.Sprintf("%s %s", cfg.Icons.Branch, branch)
+	segment := colorMagenta.Sprintf("%s %s", cfg.Segments.Git.BranchIcon, branch)
 	if dirty {
 		segment += colorYellow.Sprint("*")
 	}
@@ -131,17 +131,17 @@ func gitSegment(cfg *Config, data Payload) string {
 }
 
 func worktreeSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Worktree {
+	if cfg.Segments.Worktree.Disable {
 		return ""
 	}
 	if data.Worktree.Name == "" {
 		return ""
 	}
-	return colorDim.Sprintf("%s %s", cfg.Icons.Worktree, data.Worktree.Name)
+	return colorDim.Sprintf("%s %s", cfg.Segments.Worktree.Icon, data.Worktree.Name)
 }
 
 func contextSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Context {
+	if cfg.Segments.Context.Disable {
 		return ""
 	}
 	pct := usedPct(data.ContextWindow.UsedPercentage)
@@ -156,29 +156,29 @@ func contextSegment(cfg *Config, data Payload) string {
 	}
 
 	bar := strings.Repeat("#", filled) + strings.Repeat("-", 10-filled)
-	return selectedColor.Sprintf("%s [%s] %.0f%%", cfg.Icons.Context, bar, percent)
+	return selectedColor.Sprintf("%s [%s] %.0f%%", cfg.Segments.Context.Icon, bar, percent)
 }
 
 func costSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Cost {
+	if cfg.Segments.Cost.Disable {
 		return ""
 	}
 	if data.Cost.TotalCostUSD == nil {
 		return ""
 	}
-	segment := colorDim.Sprintf("%s $%.2f", cfg.Icons.Cost, *data.Cost.TotalCostUSD)
+	segment := colorDim.Sprintf("%s $%.2f", cfg.Segments.Cost.Icon, *data.Cost.TotalCostUSD)
 
 	if data.Cost.TotalDurationMs > 0 {
 		totalSecs := data.Cost.TotalDurationMs / 1000
 		mins := totalSecs / 60
 		secs := totalSecs % 60
-		segment += colorDim.Sprintf(" %s%dm%ds", cfg.Icons.Duration, mins, secs)
+		segment += colorDim.Sprintf(" %s%dm%ds", cfg.Segments.Cost.DurationIcon, mins, secs)
 	}
 
 	if data.Cost.TotalLinesAdded > 0 || data.Cost.TotalLinesRemoved > 0 {
 		segment += colorDim.Sprintf(
 			" %s+%d-%d",
-			cfg.Icons.Lines,
+			cfg.Segments.Cost.LinesIcon,
 			data.Cost.TotalLinesAdded,
 			data.Cost.TotalLinesRemoved,
 		)
@@ -188,73 +188,73 @@ func costSegment(cfg *Config, data Payload) string {
 }
 
 func vimSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Vim {
+	if cfg.Segments.Vim.Disable {
 		return ""
 	}
 	if data.Vim.Mode == "" {
 		return ""
 	}
 
-	icon := cfg.Icons.VimNormal
+	icon := cfg.Segments.Vim.IconNormal
 	if data.Vim.Mode == "INSERT" {
-		icon = cfg.Icons.VimInsert
+		icon = cfg.Segments.Vim.IconInsert
 	}
 
 	return colorDim.Sprintf("%s ", icon)
 }
 
 func autorunSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Autorun {
+	if cfg.Segments.Autorun.Disable {
 		return ""
 	}
 	if !data.Autorun {
 		return ""
 	}
-	return colorYellow.Sprintf("%s auto", cfg.Icons.Autorun)
+	return colorYellow.Sprintf("%s auto", cfg.Segments.Autorun.Icon)
 }
 
 func maxSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Max {
+	if cfg.Segments.Max.Disable {
 		return ""
 	}
 	if !data.Model.MaxMode {
 		return ""
 	}
-	return colorYellow.Sprintf("%s max", cfg.Icons.Max)
+	return colorYellow.Sprintf("%s max", cfg.Segments.Max.Icon)
 }
 
 func fastModeSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.FastMode {
+	if cfg.Segments.FastMode.Disable {
 		return ""
 	}
 	if !data.FastMode {
 		return ""
 	}
-	return colorCyan.Sprintf("%s fast", cfg.Icons.FastMode)
+	return colorCyan.Sprintf("%s fast", cfg.Segments.FastMode.Icon)
 }
 
 func effortSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Effort {
+	if cfg.Segments.Effort.Disable {
 		return ""
 	}
 	if data.Effort == nil || data.Effort.Level == "" {
 		return ""
 	}
-	return colorDim.Sprintf("%s %s", cfg.Icons.Effort, data.Effort.Level)
+	return colorDim.Sprintf("%s %s", cfg.Segments.Effort.Icon, data.Effort.Level)
 }
 
 func thinkingSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Thinking {
+	if cfg.Segments.Thinking.Disable {
 		return ""
 	}
 	if data.Thinking == nil || !data.Thinking.Enabled {
 		return ""
 	}
-	return colorDim.Sprintf("%s think", cfg.Icons.Thinking)
+	return colorDim.Sprintf("%s think", cfg.Segments.Thinking.Icon)
 }
 
 func sessionSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Session {
+	if cfg.Segments.Session.Disable {
 		return ""
 	}
 	name := data.SessionName
@@ -264,11 +264,11 @@ func sessionSegment(cfg *Config, data Payload) string {
 	if len(name) > 24 {
 		name = name[:24] + "…"
 	}
-	return colorDim.Sprintf("%s %s", cfg.Icons.Session, name)
+	return colorDim.Sprintf("%s %s", cfg.Segments.Session.Icon, name)
 }
 
 func prSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.PR {
+	if cfg.Segments.PR.Disable {
 		return ""
 	}
 	if data.PR == nil || data.PR.Number == 0 {
@@ -287,21 +287,21 @@ func prSegment(cfg *Config, data Payload) string {
 			label += " " + colorYellow.Sprint("●")
 		}
 	}
-	return colorMagenta.Sprintf("%s %s", cfg.Icons.PR, label)
+	return colorMagenta.Sprintf("%s %s", cfg.Segments.PR.Icon, label)
 }
 
 func agentSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Agent {
+	if cfg.Segments.Agent.Disable {
 		return ""
 	}
 	if data.Agent == nil || data.Agent.Name == "" {
 		return ""
 	}
-	return colorDim.Sprintf("%s %s", cfg.Icons.Agent, data.Agent.Name)
+	return colorDim.Sprintf("%s %s", cfg.Segments.Agent.Icon, data.Agent.Name)
 }
 
 func rateLimitSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.RateLimit {
+	if cfg.Segments.RateLimit.Disable {
 		return ""
 	}
 	if data.RateLimits == nil {
@@ -320,11 +320,11 @@ func rateLimitSegment(cfg *Config, data Payload) string {
 	if len(parts) == 0 {
 		return ""
 	}
-	return colorDim.Sprintf("%s %s", cfg.Icons.RateLimit, strings.Join(parts, " "))
+	return colorDim.Sprintf("%s %s", cfg.Segments.RateLimit.Icon, strings.Join(parts, " "))
 }
 
 func tokenSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Token {
+	if cfg.Segments.Token.Disable {
 		return ""
 	}
 	if data.ContextWindow.TotalInputTokens == 0 && data.ContextWindow.TotalOutputTokens == 0 {
@@ -332,11 +332,11 @@ func tokenSegment(cfg *Config, data Payload) string {
 	}
 	in := data.ContextWindow.TotalInputTokens
 	out := data.ContextWindow.TotalOutputTokens
-	return colorDim.Sprintf("%s %dk/%dk", cfg.Icons.Tokens, in/1000, out/1000)
+	return colorDim.Sprintf("%s %dk/%dk", cfg.Segments.Token.TokensIcon, in/1000, out/1000)
 }
 
 func cacheSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Cache {
+	if cfg.Segments.Cache.Disable {
 		return ""
 	}
 	if data.PromptCache == nil {
@@ -352,15 +352,15 @@ func cacheSegment(cfg *Config, data Payload) string {
 		hit := math.Floor(*data.PromptCache.HitRatio * 100)
 		label += fmt.Sprintf(" %.0f%%", hit)
 	}
-	return colorDim.Sprintf("%s %s", cfg.Icons.Cache, label)
+	return colorDim.Sprintf("%s %s", cfg.Segments.Cache.Icon, label)
 }
 
 func exceedsSegment(cfg *Config, data Payload) string {
-	if !cfg.Toggles.Exceeds {
+	if cfg.Segments.Exceeds.Disable {
 		return ""
 	}
 	if !data.Exceeds200k {
 		return ""
 	}
-	return colorYellow.Sprintf("%s >200k", cfg.Icons.Exceeds)
+	return colorYellow.Sprintf("%s >200k", cfg.Segments.Exceeds.Icon)
 }
