@@ -26,28 +26,29 @@ func readPayload() Payload {
 
 func main() {
 	color.NoColor = false
+	cfg := loadConfig()
 
 	data := readPayload()
 	segments := []string{
-		modelSegment(data),
-		folderSegment(data),
-		gitSegment(data),
-		worktreeSegment(data),
-		prSegment(data),
-		agentSegment(data),
-		sessionSegment(data),
-		contextSegment(data),
-		costSegment(data),
-		tokenSegment(data),
-		cacheSegment(data),
-		vimSegment(data),
-		autorunSegment(data),
-		maxSegment(data),
-		fastModeSegment(data),
-		effortSegment(data),
-		thinkingSegment(data),
-		rateLimitSegment(data),
-		exceedsSegment(data),
+		modelSegment(cfg, data),
+		folderSegment(cfg, data),
+		gitSegment(cfg, data),
+		worktreeSegment(cfg, data),
+		prSegment(cfg, data),
+		agentSegment(cfg, data),
+		sessionSegment(cfg, data),
+		contextSegment(cfg, data),
+		costSegment(cfg, data),
+		tokenSegment(cfg, data),
+		cacheSegment(cfg, data),
+		vimSegment(cfg, data),
+		autorunSegment(cfg, data),
+		maxSegment(cfg, data),
+		fastModeSegment(cfg, data),
+		effortSegment(cfg, data),
+		thinkingSegment(cfg, data),
+		rateLimitSegment(cfg, data),
+		exceedsSegment(cfg, data),
 	}
 	var nonEmpty []string
 	for _, s := range segments {
