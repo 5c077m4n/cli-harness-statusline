@@ -62,8 +62,14 @@ type SegmentsConfig struct {
 	Exceeds   Segment      `json:"exceeds"`
 }
 
+type Padding struct {
+	Top    int `json:"top"`
+	Bottom int `json:"bottom"`
+}
+
 type Config struct {
 	Segments SegmentsConfig `json:"segments"`
+	Padding  Padding        `json:"padding"`
 }
 
 func loadConfig() *Config {
