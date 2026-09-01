@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log/slog"
 	"os"
 	"path/filepath"
 
@@ -78,6 +79,7 @@ func configDir() string {
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
+		slog.Error("configDir: UserHomeDir", slog.Any("error", err))
 		return ""
 	}
 	return filepath.Join(home, ".config", "cursor-agent-statusline")
@@ -116,10 +118,20 @@ func loadConfig() *Config {
 	path := filepath.Join(dir, "config.json")
 	k := koanf.New(".")
 	if err := k.Load(file.Provider(path), json.Parser()); err != nil {
+		slog.Warn(
+			"loadConfig: config file not loaded",
+			slog.String("path", path),
+			slog.Any("error", err),
+		)
 		return cfg
 	}
 
 	if err := k.Unmarshal("", cfg); err != nil {
+		slog.Warn(
+			"loadConfig: config unmarshal failed",
+			slog.String("path", path),
+			slog.Any("error", err),
+		)
 		return cfg
 	}
 

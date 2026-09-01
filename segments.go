@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"math"
 	"os/exec"
 	"path/filepath"
@@ -39,6 +40,11 @@ func gitInfo(directory string) (string, bool) {
 	cmd := exec.Command("git", "-C", directory, "status", "--branch", "--porcelain")
 	outputBytes, err := cmd.Output()
 	if err != nil {
+		slog.Warn(
+			"gitInfo: git command failed",
+			slog.String("dir", directory),
+			slog.Any("error", err),
+		)
 		return "", false
 	}
 
