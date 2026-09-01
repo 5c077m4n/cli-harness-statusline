@@ -5,18 +5,8 @@ tasks:
     desc: Run all tests with verbose output
     cmd: go test -v -count=1 -timeout 60s ./...
 
-  bench:
-    desc: Run all benchmarks
-    cmd: go test -bench=. -benchmem -count=1 -timeout 120s ./...
-
-  bench-mean:
-    desc: Run full-render benchmark 10 times and report mean time
-    cmd: go test -bench='BenchmarkMain$' -benchmem -count=10 -timeout 120s ./...
-
-  bench-cpu:
-    desc: Run benchmarks with CPU profiling
-    cmd: go test -bench=. -benchmem -count=1 -timeout 120s -cpuprofile=cpu.out ./...
-
-  bench-mem:
-    desc: Run benchmarks with memory profiling
-    cmd: go test -bench=. -benchmem -count=1 -timeout 120s -memprofile=mem.out ./...
+  build:
+    desc: Build the binary
+    cmds:
+      - mkdir -p bin
+      - go build -o bin/statusline .

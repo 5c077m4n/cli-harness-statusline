@@ -77,8 +77,6 @@ Then configure the statusline command in `$CURSOR_CONFIG/cli-config.json`:
 
 ## Benchmarks (using [hyperfine](https://github.com/sharkdp/hyperfine))
 
-Using a full payload:
-
-|  Mean  |   σ   | Median |  Min   |  Max   | User  | System | Runs |
-| :----: | :---: | :----: | :----: | :----: | :---: | :----: | :--: |
-| 11.1ms | 2.0ms | 10.7ms | 10.0ms | 30.6ms | 3.8ms | 5.6ms  | 267  |
+See the latest results in
+[CI run](https://github.com/5c077m4n/cursor-agent-statusline/actions/workflows/ci.yaml?query=branch%3Amaster)
+under the Benchmarks step summary.
