@@ -57,6 +57,7 @@ func main() {
 		}
 	}
 	line := strings.Join(nonEmpty, termSep())
+
 	fmt.Print(strings.Repeat("\n", cfg.Padding.Top))
 	fmt.Println(line)
 	fmt.Print(strings.Repeat("\n", cfg.Padding.Bottom))
