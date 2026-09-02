@@ -7,10 +7,10 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/5c077m4n/cursor-agent-statusline/config"
-	"github.com/5c077m4n/cursor-agent-statusline/logs"
-	"github.com/5c077m4n/cursor-agent-statusline/segments"
-	"github.com/5c077m4n/cursor-agent-statusline/types"
+	"github.com/5c077m4n/cli-harness-statusline/config"
+	"github.com/5c077m4n/cli-harness-statusline/logs"
+	"github.com/5c077m4n/cli-harness-statusline/segments"
+	"github.com/5c077m4n/cli-harness-statusline/types"
 	"github.com/fatih/color"
 )
 
