@@ -57,7 +57,7 @@ type (
 	}
 	RateLimitWindow struct {
 		UsedPercentage float64 `json:"used_percentage"`
-		ResetsAt       string  `json:"resets_at"`
+		ResetsAt       float64 `json:"resets_at"`
 	}
 	RateLimits struct {
 		FiveHour   *RateLimitWindow `json:"five_hour,omitzero"`

@@ -21,8 +21,6 @@ func init() {
 	testCfg = loadConfig()
 }
 
-func ptr[T any](v T) *T { return &v }
-
 func runCmd(t testing.TB, dir, name string, args ...string) {
 	t.Helper()
 
@@ -120,32 +118,32 @@ func TestContextSegment(t *testing.T) {
 	}{
 		{
 			name: "0 percent",
-			data: Payload{ContextWindow: ContextWindowInfo{UsedPercentage: ptr(0.0)}},
+			data: Payload{ContextWindow: ContextWindowInfo{UsedPercentage: new(0.0)}},
 			want: testCfg.Segments.Context.Icon + " [----------] 0%",
 		},
 		{
 			name: "50 percent",
-			data: Payload{ContextWindow: ContextWindowInfo{UsedPercentage: ptr(50.0)}},
+			data: Payload{ContextWindow: ContextWindowInfo{UsedPercentage: new(50.0)}},
 			want: testCfg.Segments.Context.Icon + " [#####-----] 50%",
 		},
 		{
 			name: "100 percent",
-			data: Payload{ContextWindow: ContextWindowInfo{UsedPercentage: ptr(100.0)}},
+			data: Payload{ContextWindow: ContextWindowInfo{UsedPercentage: new(100.0)}},
 			want: testCfg.Segments.Context.Icon + " [##########] 100%",
 		},
 		{
 			name: "negative percent",
-			data: Payload{ContextWindow: ContextWindowInfo{UsedPercentage: ptr(-10.0)}},
+			data: Payload{ContextWindow: ContextWindowInfo{UsedPercentage: new(-10.0)}},
 			want: testCfg.Segments.Context.Icon + " [----------] -10%",
 		},
 		{
 			name: "over 100 percent",
-			data: Payload{ContextWindow: ContextWindowInfo{UsedPercentage: ptr(150.0)}},
+			data: Payload{ContextWindow: ContextWindowInfo{UsedPercentage: new(150.0)}},
 			want: testCfg.Segments.Context.Icon + " [##########] 150%",
 		},
 		{
 			name: "fractional percent floors",
-			data: Payload{ContextWindow: ContextWindowInfo{UsedPercentage: ptr(59.9)}},
+			data: Payload{ContextWindow: ContextWindowInfo{UsedPercentage: new(59.9)}},
 			want: testCfg.Segments.Context.Icon + " [#####-----] 59%",
 		},
 	}
@@ -404,7 +402,7 @@ func TestMainFullPayload(t *testing.T) {
 	require.NoError(t, err)
 	os.Stdout = outW
 
-	input := `{"cwd":"/home/user/my-project","session_id":"abc123","session_name":"my-session","prompt_id":"550e8400-e29b-41d4-a716-446655440000","transcript_path":"/path/to/transcript.jsonl","version":"2.1.90","autorun":true,"fast_mode":true,"exceeds_200k_tokens":false,"model":{"id":"claude-sonnet-4-20250514","display_name":"claude-sonnet-4-20250514","max_mode":false},"workspace":{"current_dir":"/home/user/my-project","project_dir":"/home/user/my-project","added_dirs":["/other/lib"],"git_worktree":"feature-xyz","repo":{"host":"github.com","owner":"anthropics","name":"claude-code"}},"worktree":{"name":"my-feature","path":"/path/to/.claude/worktrees/my-feature","branch":"worktree-my-feature","original_cwd":"/home/user","original_branch":"main"},"context_window":{"total_input_tokens":15500,"total_output_tokens":1200,"context_window_size":200000,"used_percentage":35,"remaining_percentage":65,"current_usage":{"input_tokens":8500,"output_tokens":1200,"cache_creation_input_tokens":5000,"cache_read_input_tokens":2000}},"cost":{"total_cost_usd":0.05,"total_duration_ms":45000,"total_api_duration_ms":2300,"total_lines_added":156,"total_lines_removed":23},"vim":{"mode":"INSERT"},"effort":{"level":"high"},"thinking":{"enabled":true},"output_style":{"name":"default"},"rate_limits":{"five_hour":{"used_percentage":23.5,"resets_at":"2025-01-01T00:00:00Z"},"seven_day":{"used_percentage":41.2,"resets_at":"2025-01-01T00:00:00Z"},"spend_limit":{"used_percentage":62.8,"resets_at":"2025-01-01T00:00:00Z"}},"prompt_cache":{"warm":true,"caching_observed":true,"ttl":"1h","expires_at":"2025-01-01T00:00:00Z","requests":14,"misses":2,"expected_rebuilds":1,"hit_ratio":0.91,"cache_write_tokens":352000,"miss_recache_tokens":310200,"last_miss_at":"2025-01-01T00:00:00Z","recache_tokens_if_cold":45000},"agent":{"name":"security-reviewer"},"pr":{"number":1234,"url":"https://github.com/anthropics/claude-code/pull/1234","review_state":"pending"}}`
+	input := `{"cwd":"/home/user/my-project","session_id":"abc123","session_name":"my-session","prompt_id":"550e8400-e29b-41d4-a716-446655440000","transcript_path":"/path/to/transcript.jsonl","version":"2.1.90","autorun":true,"fast_mode":true,"exceeds_200k_tokens":false,"model":{"id":"claude-sonnet-4-20250514","display_name":"claude-sonnet-4-20250514","max_mode":false},"workspace":{"current_dir":"/home/user/my-project","project_dir":"/home/user/my-project","added_dirs":["/other/lib"],"git_worktree":"feature-xyz","repo":{"host":"github.com","owner":"anthropics","name":"claude-code"}},"worktree":{"name":"my-feature","path":"/path/to/.claude/worktrees/my-feature","branch":"worktree-my-feature","original_cwd":"/home/user","original_branch":"main"},"context_window":{"total_input_tokens":15500,"total_output_tokens":1200,"context_window_size":200000,"used_percentage":35,"remaining_percentage":65,"current_usage":{"input_tokens":8500,"output_tokens":1200,"cache_creation_input_tokens":5000,"cache_read_input_tokens":2000}},"cost":{"total_cost_usd":0.05,"total_duration_ms":45000,"total_api_duration_ms":2300,"total_lines_added":156,"total_lines_removed":23},"vim":{"mode":"INSERT"},"effort":{"level":"high"},"thinking":{"enabled":true},"output_style":{"name":"default"},"rate_limits":{"five_hour":{"used_percentage":23.5,"resets_at":1735689600},"seven_day":{"used_percentage":41.2,"resets_at":1735689600},"spend_limit":{"used_percentage":62.8,"resets_at":1735689600}},"prompt_cache":{"warm":true,"caching_observed":true,"ttl":"1h","expires_at":"2025-01-01T00:00:00Z","requests":14,"misses":2,"expected_rebuilds":1,"hit_ratio":0.91,"cache_write_tokens":352000,"miss_recache_tokens":310200,"last_miss_at":"2025-01-01T00:00:00Z","recache_tokens_if_cold":45000},"agent":{"name":"security-reviewer"},"pr":{"number":1234,"url":"https://github.com/anthropics/claude-code/pull/1234","review_state":"pending"}}`
 	_, err = w.Write([]byte(input))
 	require.NoError(t, err)
 	require.NoError(t, w.Close())
@@ -493,7 +491,7 @@ func TestContextSegmentColorThresholds(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			data := Payload{ContextWindow: ContextWindowInfo{UsedPercentage: ptr(tt.percent)}}
+			data := Payload{ContextWindow: ContextWindowInfo{UsedPercentage: new(tt.percent)}}
 			assert.Contains(t, contextSegment(testCfg, data), tt.want)
 		})
 	}
@@ -515,7 +513,7 @@ func TestContextSegmentBarFilling(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
-			data := Payload{ContextWindow: ContextWindowInfo{UsedPercentage: ptr(tt.percent)}}
+			data := Payload{ContextWindow: ContextWindowInfo{UsedPercentage: new(tt.percent)}}
 			got := contextSegment(testCfg, data)
 			expectedBar := strings.Repeat("#", tt.filled) + strings.Repeat("-", 10-tt.filled)
 			assert.Contains(t, got, "["+expectedBar+"]")
@@ -654,22 +652,22 @@ func TestPRSegment(t *testing.T) {
 		{name: "nil PR", data: Payload{}, want: ""},
 		{
 			name: "PR with approved review",
-			data: Payload{PR: &PRInfo{Number: 1, ReviewState: ptr("approved")}},
+			data: Payload{PR: &PRInfo{Number: 1, ReviewState: new("approved")}},
 			want: testCfg.Segments.PR.Icon + " #1 ✓",
 		},
 		{
 			name: "PR with changes requested",
-			data: Payload{PR: &PRInfo{Number: 2, ReviewState: ptr("changes_requested")}},
+			data: Payload{PR: &PRInfo{Number: 2, ReviewState: new("changes_requested")}},
 			want: testCfg.Segments.PR.Icon + " #2 ✗",
 		},
 		{
 			name: "PR draft",
-			data: Payload{PR: &PRInfo{Number: 3, ReviewState: ptr("draft")}},
+			data: Payload{PR: &PRInfo{Number: 3, ReviewState: new("draft")}},
 			want: testCfg.Segments.PR.Icon + " #3 ○",
 		},
 		{
 			name: "PR pending",
-			data: Payload{PR: &PRInfo{Number: 4, ReviewState: ptr("pending")}},
+			data: Payload{PR: &PRInfo{Number: 4, ReviewState: new("pending")}},
 			want: testCfg.Segments.PR.Icon + " #4 ●",
 		},
 	}
@@ -742,7 +740,7 @@ func TestCacheSegment(t *testing.T) {
 		{name: "nil prompt cache", data: Payload{}, want: ""},
 		{
 			name: "warm cache with hit ratio",
-			data: Payload{PromptCache: &PromptCacheInfo{Warm: true, HitRatio: ptr(0.91)}},
+			data: Payload{PromptCache: &PromptCacheInfo{Warm: true, HitRatio: new(0.91)}},
 			want: testCfg.Segments.Cache.Icon + " warm 91%",
 		},
 		{
