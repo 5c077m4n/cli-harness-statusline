@@ -1,4 +1,5 @@
-package main
+// Package config setup
+package config
 
 import (
 	"log/slog"
@@ -85,7 +86,7 @@ func configDir() string {
 	return filepath.Join(home, ".config", "cursor-agent-statusline")
 }
 
-func loadConfig() *Config {
+func Load() *Config {
 	cfg := &Config{
 		Segments: SegmentsConfig{
 			Model:     Segment{Icon: "󰚩"},
