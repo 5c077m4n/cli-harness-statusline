@@ -33,7 +33,7 @@ All fields are optional — any omitted field falls back to its default.
     "session": { "disable": false, "icon": "󰋩" }, // Show session name (truncated)
     "context": { "disable": false, "icon": "󰧑" }, // Show context usage bar and percentage
     "cost": { "disable": false, "duration": "󱎫", "lines": "󰆓" }, // Show total cost, duration, lines
-    "token": { "disable": false, "tokens": "󰹑", "iconIn": "↑", "iconOut": "↓" }, // Show input/output token counts
+    "token": { "disable": false, "tokens": "󰹑", "iconIn": "↓", "iconOut": "↑" }, // Show input/output token counts
     "cache": { "disable": false, "icon": "󰚩" }, // Show cache status and hit ratio
     "vim": {
       "disable": false,

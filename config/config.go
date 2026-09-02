@@ -108,7 +108,7 @@ func Load() *Config {
 			Agent:     Segment{Icon: "󰀈"},
 			RateLimit: Segment{Icon: "󰩯"},
 			Cache:     Segment{Icon: "󰚩"},
-			Token:     TokenSegment{TokensIcon: "󰹑", IconIn: "↑", IconOut: "↓"},
+			Token:     TokenSegment{TokensIcon: "󰹑", IconIn: "↓", IconOut: "↑"},
 			Exceeds:   Segment{Icon: "󰄘"},
 		},
 	}
