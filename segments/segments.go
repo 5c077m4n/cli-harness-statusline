@@ -91,7 +91,7 @@ func model(cfg *config.Config, data types.Payload) string {
 	}
 	name := data.Model.DisplayName
 	if name == "" {
-		name = data.Model.Id
+		name = data.Model.ID
 	}
 	if name == "" {
 		name = "unknown"
