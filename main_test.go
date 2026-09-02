@@ -331,7 +331,11 @@ func TestMainFullPayload(t *testing.T) {
 	assert.Contains(t, output, testCfg.Segments.Agent.Icon+" security-reviewer")
 	assert.Contains(t, output, testCfg.Segments.Worktree.Icon+" my-feature")
 	assert.Contains(t, output, testCfg.Segments.Session.Icon+" my-session")
-	assert.Contains(t, output, testCfg.Segments.PR.Icon+" #1234")
+	assert.Contains(
+		t,
+		output,
+		testCfg.Segments.PR.Icon+" "+osc8Start+"https://github.com/anthropics/claude-code/pull/1234"+osc8Sep+"#1234",
+	)
 	assert.Contains(t, output, testCfg.Segments.Context.Icon+" [###-------] 35%")
 	assert.Contains(t, output, testCfg.Segments.Cost.Icon+" $0.05")
 	assert.Contains(t, output, testCfg.Segments.Token.TokensIcon+" 15k/1k")
@@ -581,7 +585,7 @@ func TestPRSegment(t *testing.T) {
 		{
 			name: "PR without review state",
 			data: Payload{PR: &PRInfo{Number: 42, URL: "https://example.com/pr/42"}},
-			want: testCfg.Segments.PR.Icon + " #42",
+			want: testCfg.Segments.PR.Icon + " " + osc8Start + "https://example.com/pr/42" + osc8Sep + "#42" + osc8End,
 		},
 		{name: "nil PR", data: Payload{}, want: ""},
 		{

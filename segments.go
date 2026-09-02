@@ -25,6 +25,12 @@ var (
 	branchRegex = regexp.MustCompile(`^(?:No commits yet on )?([^\.\n]+)`)
 )
 
+const (
+	osc8Start = "\033]8;;"
+	osc8Sep   = "\033\\"
+	osc8End   = "\033]8;;\033\\"
+)
+
 func usedPct(pct *float64) float64 {
 	if pct == nil {
 		return 0
@@ -292,6 +298,9 @@ func prSegment(cfg *Config, data Payload) string {
 		default:
 			label += " " + colorYellow.Sprint("●")
 		}
+	}
+	if data.PR.URL != "" {
+		label = strings.Join([]string{osc8Start, data.PR.URL, osc8Sep, label, osc8End}, "")
 	}
 	return colorMagenta.Sprintf("%s %s", cfg.Segments.PR.Icon, label)
 }
