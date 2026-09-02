@@ -33,8 +33,8 @@ All fields are optional — any omitted field falls back to its default.
     "session": { "disable": false, "icon": "󰋩" }, // Show session name (truncated)
     "context": { "disable": false, "icon": "󰧑" }, // Show context usage bar and percentage
     "cost": { "disable": false, "duration": "󱎫", "lines": "󰆓" }, // Show total cost, duration, lines
-    "token": { "disable": false, "tokens": "󰹑", "iconIn": "↓", "iconOut": "↑" }, // Show input/output token counts
-    "cache": { "disable": false, "icon": "󰚩" }, // Show cache status and hit ratio
+    "token": { "disable": false, "icon": "󰹑", "iconIn": "↓", "iconOut": "↑" }, // Show input/output token counts
+    "cache": { "disable": false, "icon": "󰋊" }, // Show cache status and hit ratio
     "vim": {
       "disable": false,
       "icon": "󰌌",
@@ -46,7 +46,7 @@ All fields are optional — any omitted field falls back to its default.
     "fastMode": { "disable": false, "icon": "⚡" }, // Show "fast" when fast mode enabled
     "effort": { "disable": false, "icon": "󰗡" }, // Show effort level
     "thinking": { "disable": false, "icon": "󰜗" }, // Show "think" when thinking enabled
-    "rateLimit": { "disable": false, "icon": "󰩯" }, // Show rate limit usage percentages
+    "rateLimit": { "disable": false, "icon": "󰌉" }, // Show rate limit usage percentages
     "exceeds": { "disable": false, "icon": "󰄘" } // Show 200k+ context warning marker
   },
   "padding": {
