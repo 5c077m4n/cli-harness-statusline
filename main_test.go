@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/5c077m4n/cursor-agent-statusline/config"
+	"github.com/5c077m4n/cli-harness-statusline/config"
 	"github.com/fatih/color"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

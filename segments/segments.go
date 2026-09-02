@@ -9,8 +9,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/5c077m4n/cursor-agent-statusline/config"
-	"github.com/5c077m4n/cursor-agent-statusline/types"
+	"github.com/5c077m4n/cli-harness-statusline/config"
+	"github.com/5c077m4n/cli-harness-statusline/types"
 	"github.com/fatih/color"
 )
 

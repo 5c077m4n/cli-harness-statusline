@@ -78,14 +78,14 @@ type Config struct {
 
 func configDir() string {
 	if dir := os.Getenv("XDG_CONFIG_HOME"); dir != "" {
-		return filepath.Join(dir, "cursor-agent-statusline")
+		return filepath.Join(dir, "cli-harness-statusline")
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
 		slog.Error("configDir: UserHomeDir", slog.Any("error", err))
 		return ""
 	}
-	return filepath.Join(home, ".config", "cursor-agent-statusline")
+	return filepath.Join(home, ".config", "cli-harness-statusline")
 }
 
 func Load() *Config {
