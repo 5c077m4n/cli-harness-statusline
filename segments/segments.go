@@ -1,4 +1,4 @@
-package main
+package segments
 
 import (
 	"fmt"
@@ -9,6 +9,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/5c077m4n/cursor-agent-statusline/config"
+	"github.com/5c077m4n/cursor-agent-statusline/types"
 	"github.com/fatih/color"
 )
 
@@ -38,7 +40,7 @@ func usedPct(pct *float64) float64 {
 	return *pct
 }
 
-func termSep() string {
+func TermSep() string {
 	return colorGray.Sprint(" | ")
 }
 
@@ -83,7 +85,7 @@ func gitInfo(directory string) (string, bool) {
 	return match[1], dirty
 }
 
-func modelSegment(cfg *Config, data Payload) string {
+func model(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Model.Disable {
 		return ""
 	}
@@ -97,7 +99,7 @@ func modelSegment(cfg *Config, data Payload) string {
 	return colorBlue.Add(color.Bold).Sprintf("%s %s", cfg.Segments.Model.Icon, name)
 }
 
-func folderSegment(cfg *Config, data Payload) string {
+func folder(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Folder.Disable {
 		return ""
 	}
@@ -117,7 +119,7 @@ func folderSegment(cfg *Config, data Payload) string {
 	return colorDim.Sprintf("%s %s", cfg.Segments.Folder.Icon, folder)
 }
 
-func gitSegment(cfg *Config, data Payload) string {
+func git(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Git.Disable {
 		return ""
 	}
@@ -142,7 +144,7 @@ func gitSegment(cfg *Config, data Payload) string {
 	return segment
 }
 
-func worktreeSegment(cfg *Config, data Payload) string {
+func worktree(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Worktree.Disable {
 		return ""
 	}
@@ -152,7 +154,7 @@ func worktreeSegment(cfg *Config, data Payload) string {
 	return colorDim.Sprintf("%s %s", cfg.Segments.Worktree.Icon, data.Worktree.Name)
 }
 
-func contextSegment(cfg *Config, data Payload) string {
+func context(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Context.Disable {
 		return ""
 	}
@@ -171,7 +173,7 @@ func contextSegment(cfg *Config, data Payload) string {
 	return selectedColor.Sprintf("%s [%s] %.0f%%", cfg.Segments.Context.Icon, bar, percent)
 }
 
-func costSegment(cfg *Config, data Payload) string {
+func cost(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Cost.Disable {
 		return ""
 	}
@@ -199,7 +201,7 @@ func costSegment(cfg *Config, data Payload) string {
 	return segment
 }
 
-func vimSegment(cfg *Config, data Payload) string {
+func vim(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Vim.Disable {
 		return ""
 	}
@@ -215,7 +217,7 @@ func vimSegment(cfg *Config, data Payload) string {
 	return colorDim.Sprintf("%s ", icon)
 }
 
-func autorunSegment(cfg *Config, data Payload) string {
+func autorun(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Autorun.Disable {
 		return ""
 	}
@@ -225,7 +227,7 @@ func autorunSegment(cfg *Config, data Payload) string {
 	return colorYellow.Sprintf("%s auto", cfg.Segments.Autorun.Icon)
 }
 
-func maxSegment(cfg *Config, data Payload) string {
+func max(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Max.Disable {
 		return ""
 	}
@@ -235,7 +237,7 @@ func maxSegment(cfg *Config, data Payload) string {
 	return colorYellow.Sprintf("%s max", cfg.Segments.Max.Icon)
 }
 
-func fastModeSegment(cfg *Config, data Payload) string {
+func fastMode(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.FastMode.Disable {
 		return ""
 	}
@@ -245,7 +247,7 @@ func fastModeSegment(cfg *Config, data Payload) string {
 	return colorCyan.Sprintf("%s fast", cfg.Segments.FastMode.Icon)
 }
 
-func effortSegment(cfg *Config, data Payload) string {
+func effort(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Effort.Disable {
 		return ""
 	}
@@ -255,7 +257,7 @@ func effortSegment(cfg *Config, data Payload) string {
 	return colorDim.Sprintf("%s %s", cfg.Segments.Effort.Icon, data.Effort.Level)
 }
 
-func thinkingSegment(cfg *Config, data Payload) string {
+func thinking(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Thinking.Disable {
 		return ""
 	}
@@ -265,7 +267,7 @@ func thinkingSegment(cfg *Config, data Payload) string {
 	return colorDim.Sprintf("%s think", cfg.Segments.Thinking.Icon)
 }
 
-func sessionSegment(cfg *Config, data Payload) string {
+func session(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Session.Disable {
 		return ""
 	}
@@ -279,7 +281,7 @@ func sessionSegment(cfg *Config, data Payload) string {
 	return colorDim.Sprintf("%s %s", cfg.Segments.Session.Icon, name)
 }
 
-func prSegment(cfg *Config, data Payload) string {
+func pr(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.PR.Disable {
 		return ""
 	}
@@ -305,7 +307,7 @@ func prSegment(cfg *Config, data Payload) string {
 	return colorMagenta.Sprintf("%s %s", cfg.Segments.PR.Icon, label)
 }
 
-func agentSegment(cfg *Config, data Payload) string {
+func agent(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Agent.Disable {
 		return ""
 	}
@@ -315,7 +317,7 @@ func agentSegment(cfg *Config, data Payload) string {
 	return colorDim.Sprintf("%s %s", cfg.Segments.Agent.Icon, data.Agent.Name)
 }
 
-func rateLimitSegment(cfg *Config, data Payload) string {
+func rateLimit(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.RateLimit.Disable {
 		return ""
 	}
@@ -338,7 +340,7 @@ func rateLimitSegment(cfg *Config, data Payload) string {
 	return colorDim.Sprintf("%s %s", cfg.Segments.RateLimit.Icon, strings.Join(parts, " "))
 }
 
-func tokenSegment(cfg *Config, data Payload) string {
+func token(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Token.Disable {
 		return ""
 	}
@@ -350,7 +352,7 @@ func tokenSegment(cfg *Config, data Payload) string {
 	return colorDim.Sprintf("%s %dk/%dk", cfg.Segments.Token.TokensIcon, in/1000, out/1000)
 }
 
-func cacheSegment(cfg *Config, data Payload) string {
+func cache(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Cache.Disable {
 		return ""
 	}
@@ -370,7 +372,7 @@ func cacheSegment(cfg *Config, data Payload) string {
 	return colorDim.Sprintf("%s %s", cfg.Segments.Cache.Icon, label)
 }
 
-func exceedsSegment(cfg *Config, data Payload) string {
+func exceeds(cfg *config.Config, data types.Payload) string {
 	if cfg.Segments.Exceeds.Disable {
 		return ""
 	}
@@ -378,4 +380,36 @@ func exceedsSegment(cfg *Config, data Payload) string {
 		return ""
 	}
 	return colorYellow.Sprintf("%s >200k", cfg.Segments.Exceeds.Icon)
+}
+
+func Render(cfg *config.Config, data types.Payload) string {
+	segmentFuncs := [...]func(*config.Config, types.Payload) string{
+		model,
+		folder,
+		git,
+		worktree,
+		pr,
+		agent,
+		session,
+		context,
+		cost,
+		token,
+		cache,
+		vim,
+		autorun,
+		max,
+		fastMode,
+		effort,
+		thinking,
+		rateLimit,
+		exceeds,
+	}
+
+	nonEmpty := make([]string, 0, len(segmentFuncs))
+	for _, segFunc := range segmentFuncs {
+		if s := segFunc(cfg, data); s != "" {
+			nonEmpty = append(nonEmpty, s)
+		}
+	}
+	return strings.Join(nonEmpty, TermSep())
 }
