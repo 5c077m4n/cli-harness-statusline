@@ -101,7 +101,7 @@ func Load() *Config {
 			Autorun:   Segment{Icon: "󰄙"},
 			Max:       Segment{Icon: "󰓅"},
 			Session:   Segment{Icon: "󰋩"},
-			FastMode:  Segment{Icon: "󰑤"},
+			FastMode:  Segment{Icon: "⚡"},
 			Effort:    Segment{Icon: "󰗡"},
 			Thinking:  Segment{Icon: "󰜗"},
 			PR:        Segment{Icon: "󰐃"},

@@ -43,7 +43,7 @@ All fields are optional — any omitted field falls back to its default.
     }, // Show vim INSERT/NORMAL mode
     "autorun": { "disable": false, "icon": "󰄙" }, // Show "auto" when autorun enabled
     "max": { "disable": false, "icon": "󰓅" }, // Show "max" when max mode enabled
-    "fastMode": { "disable": false, "icon": "󰑤" }, // Show "fast" when fast mode enabled
+    "fastMode": { "disable": false, "icon": "⚡" }, // Show "fast" when fast mode enabled
     "effort": { "disable": false, "icon": "󰗡" }, // Show effort level
     "thinking": { "disable": false, "icon": "󰜗" }, // Show "think" when thinking enabled
     "rateLimit": { "disable": false, "icon": "󰩯" }, // Show rate limit usage percentages
