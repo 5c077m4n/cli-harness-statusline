@@ -37,11 +37,10 @@ type CostSegment struct {
 }
 
 type TokenSegment struct {
-	Disable    bool   `json:"disable"`
-	Icon       string `json:"icon"`
-	TokensIcon string `json:"tokens"`
-	IconIn     string `json:"iconIn"`
-	IconOut    string `json:"iconOut"`
+	Disable   bool   `json:"disable"`
+	TokenIcon string `json:"icon"`
+	IconIn    string `json:"iconIn"`
+	IconOut   string `json:"iconOut"`
 }
 
 type SegmentsConfig struct {
@@ -101,14 +100,14 @@ func Load() *Config {
 			Autorun:   Segment{Icon: "󰄙"},
 			Max:       Segment{Icon: "󰓅"},
 			Session:   Segment{Icon: "󰋩"},
-			FastMode:  Segment{Icon: "󰑤"},
+			FastMode:  Segment{Icon: "⚡"},
 			Effort:    Segment{Icon: "󰗡"},
 			Thinking:  Segment{Icon: "󰜗"},
 			PR:        Segment{Icon: "󰐃"},
 			Agent:     Segment{Icon: "󰀈"},
-			RateLimit: Segment{Icon: "󰩯"},
-			Cache:     Segment{Icon: "󰚩"},
-			Token:     TokenSegment{TokensIcon: "󰹑", IconIn: "↑", IconOut: "↓"},
+			RateLimit: Segment{Icon: "󰌉"},
+			Cache:     Segment{Icon: "󰋊"},
+			Token:     TokenSegment{TokenIcon: "󰹑", IconIn: "↓", IconOut: "↑"},
 			Exceeds:   Segment{Icon: "󰄘"},
 		},
 	}
