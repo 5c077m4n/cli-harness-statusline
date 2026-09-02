@@ -72,6 +72,7 @@ jobs:
           EOF
 
           hyperfine \
+            --show-output \
             --warmup 3 \
             --min-runs 10 \
             --input input.json \
