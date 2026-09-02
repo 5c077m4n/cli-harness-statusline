@@ -533,7 +533,7 @@ func TestToken(t *testing.T) {
 					TotalOutputTokens: 1200,
 				},
 			},
-			want: testCfg.Segments.Token.TokensIcon + " 15k/1k",
+			want: testCfg.Segments.Token.IconIn + "15k " + testCfg.Segments.Token.IconOut + "1k",
 		},
 	}
 	for _, tt := range tests {
