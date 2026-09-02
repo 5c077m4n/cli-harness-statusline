@@ -33,7 +33,7 @@ omitted field falls back to its default.
     "agent": { "disable": false, "icon": "󰀈" }, // Show active agent name
     "session": { "disable": false, "icon": "󰋩" }, // Show session name (truncated)
     "context": { "disable": false, "icon": "󰧑" }, // Show context usage bar and percentage
-    "cost": { "disable": false, "icon": "󰆛", "duration": "󰥔", "lines": "󰆓" }, // Show total cost, duration, lines
+    "cost": { "disable": false, "icon": "󰆛", "duration": "󱎫", "lines": "󰆓" }, // Show total cost, duration, lines
     "token": { "disable": false, "icon": "󰹑", "tokens": "󰹑" }, // Show input/output token counts
     "cache": { "disable": false, "icon": "󰚩" }, // Show cache status and hit ratio
     "vim": {

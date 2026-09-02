@@ -96,7 +96,7 @@ func Load() *Config {
 			Git:       GitSegment{BranchIcon: "󰊢"},
 			Worktree:  Segment{Icon: "󰙅"},
 			Context:   Segment{Icon: "󰧑"},
-			Cost:      CostSegment{DurationIcon: "󰥔", LinesIcon: "󰆓"},
+			Cost:      CostSegment{DurationIcon: "󱎫", LinesIcon: "󰆓"},
 			Vim:       VimSegment{Icon: "󰌌", IconInsert: "󰏫", IconNormal: "󰌌"},
 			Autorun:   Segment{Icon: "󰄙"},
 			Max:       Segment{Icon: "󰓅"},
