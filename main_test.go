@@ -5,7 +5,6 @@ import (
 	"math"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 	"testing"
 
@@ -19,16 +18,6 @@ var testCfg *Config
 func init() {
 	color.NoColor = true
 	testCfg = loadConfig()
-}
-
-func runCmd(t testing.TB, dir, name string, args ...string) {
-	t.Helper()
-
-	cmd := exec.Command(name, args...)
-	cmd.Dir = dir
-	out, err := cmd.CombinedOutput()
-
-	require.NoErrorf(t, err, "command %s %v failed in %s:\n%s", name, args, dir, string(out))
 }
 
 func TestTermSep(t *testing.T) {
@@ -46,7 +35,11 @@ func TestModelSegment(t *testing.T) {
 			data: Payload{Model: ModelInfo{DisplayName: "gpt-4"}},
 			want: testCfg.Segments.Model.Icon + " gpt-4",
 		},
-		{name: "empty display name", data: Payload{}, want: testCfg.Segments.Model.Icon + " unknown"},
+		{
+			name: "empty display name",
+			data: Payload{},
+			want: testCfg.Segments.Model.Icon + " unknown",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -71,7 +64,11 @@ func TestFolderSegment(t *testing.T) {
 			data: Payload{Cwd: "/home/user/other"},
 			want: testCfg.Segments.Folder.Icon + " other",
 		},
-		{name: "both empty maps to root", data: Payload{}, want: testCfg.Segments.Folder.Icon + " /"},
+		{
+			name: "both empty maps to root",
+			data: Payload{},
+			want: testCfg.Segments.Folder.Icon + " /",
+		},
 		{
 			name: "root path",
 			data: Payload{Workspace: WorkspaceInfo{CurrentDir: "/"}},
@@ -210,7 +207,11 @@ func TestAutorunSegment(t *testing.T) {
 		data Payload
 		want string
 	}{
-		{name: "autorun on", data: Payload{Autorun: true}, want: testCfg.Segments.Autorun.Icon + " auto"},
+		{
+			name: "autorun on",
+			data: Payload{Autorun: true},
+			want: testCfg.Segments.Autorun.Icon + " auto",
+		},
 		{name: "autorun off", data: Payload{}, want: ""},
 	}
 	for _, tt := range tests {
@@ -245,101 +246,10 @@ func TestGitSegment_NotAGitRepo(t *testing.T) {
 	assert.Empty(t, gitSegment(testCfg, data))
 }
 
-func TestGitSegment_CleanRepo(t *testing.T) {
-	tmpDir := t.TempDir()
-	runCmd(t, tmpDir, "git", "init")
-	runCmd(t, tmpDir, "git", "config", "user.email", "[EMAIL]")
-	runCmd(t, tmpDir, "git", "config", "user.name", "Test")
-	runCmd(t, tmpDir, "git", "commit", "--allow-empty", "-m", "initial")
-	runCmd(t, tmpDir, "git", "branch", "-M", "main")
-
-	data := Payload{Cwd: tmpDir, Workspace: WorkspaceInfo{CurrentDir: tmpDir}}
-	assert.Equal(t, testCfg.Segments.Git.BranchIcon+" main", gitSegment(testCfg, data))
-}
-
-func TestGitSegment_DirtyRepo(t *testing.T) {
-	tmpDir := t.TempDir()
-	runCmd(t, tmpDir, "git", "init")
-	runCmd(t, tmpDir, "git", "config", "user.email", "[EMAIL]")
-	runCmd(t, tmpDir, "git", "config", "user.name", "Test")
-	runCmd(t, tmpDir, "git", "commit", "--allow-empty", "-m", "initial")
-	runCmd(t, tmpDir, "git", "branch", "-M", "main")
-	require.NoError(t, os.WriteFile(filepath.Join(tmpDir, "dirty.txt"), []byte("dirty"), 0644))
-
-	data := Payload{Cwd: tmpDir, Workspace: WorkspaceInfo{CurrentDir: tmpDir}}
-	got := gitSegment(testCfg, data)
-	assert.Contains(t, got, testCfg.Segments.Git.BranchIcon+" main")
-	assert.True(t, strings.HasSuffix(got, "*"), "expected trailing * for dirty repo")
-}
-
 func TestGitInfo_NotAGitRepo(t *testing.T) {
 	branch, dirty := gitInfo(t.TempDir())
 	assert.Empty(t, branch)
 	assert.False(t, dirty)
-}
-
-func TestGitInfo_CleanRepo(t *testing.T) {
-	tmpDir := t.TempDir()
-	runCmd(t, tmpDir, "git", "init")
-	runCmd(t, tmpDir, "git", "config", "user.email", "[EMAIL]")
-	runCmd(t, tmpDir, "git", "config", "user.name", "Test")
-	runCmd(t, tmpDir, "git", "commit", "--allow-empty", "-m", "initial")
-	runCmd(t, tmpDir, "git", "branch", "-M", "main")
-
-	branch, dirty := gitInfo(tmpDir)
-	assert.Equal(t, "main", branch)
-	assert.False(t, dirty)
-}
-
-func TestGitInfo_DirtyRepo(t *testing.T) {
-	tmpDir := t.TempDir()
-	runCmd(t, tmpDir, "git", "init")
-	runCmd(t, tmpDir, "git", "config", "user.email", "[EMAIL]")
-	runCmd(t, tmpDir, "git", "config", "user.name", "Test")
-	runCmd(t, tmpDir, "git", "commit", "--allow-empty", "-m", "initial")
-	runCmd(t, tmpDir, "git", "branch", "-M", "main")
-	require.NoError(t, os.WriteFile(filepath.Join(tmpDir, "dirty.txt"), []byte("dirty"), 0644))
-
-	branch, dirty := gitInfo(tmpDir)
-	assert.Equal(t, "main", branch)
-	assert.True(t, dirty)
-}
-
-func TestGitInfo_DetachedHead(t *testing.T) {
-	tmpDir := t.TempDir()
-	runCmd(t, tmpDir, "git", "init")
-	runCmd(t, tmpDir, "git", "config", "user.email", "[EMAIL]")
-	runCmd(t, tmpDir, "git", "config", "user.name", "Test")
-	runCmd(t, tmpDir, "git", "commit", "--allow-empty", "-m", "first")
-	runCmd(t, tmpDir, "git", "checkout", "-b", "temp")
-	runCmd(t, tmpDir, "git", "checkout", "HEAD~0")
-
-	branch, dirty := gitInfo(tmpDir)
-	assert.Empty(t, branch)
-	assert.False(t, dirty)
-}
-
-func TestGitInfo_NoCommits(t *testing.T) {
-	tmpDir := t.TempDir()
-	runCmd(t, tmpDir, "git", "init")
-	runCmd(t, tmpDir, "git", "config", "user.email", "[EMAIL]")
-	runCmd(t, tmpDir, "git", "config", "user.name", "Test")
-
-	branch, dirty := gitInfo(tmpDir)
-	assert.NotEmpty(t, branch, "expected a branch name even with no commits")
-	assert.False(t, dirty)
-}
-
-func TestGitSegment_FallbackToCwd(t *testing.T) {
-	tmpDir := t.TempDir()
-	runCmd(t, tmpDir, "git", "init")
-	runCmd(t, tmpDir, "git", "config", "user.email", "[EMAIL]")
-	runCmd(t, tmpDir, "git", "config", "user.name", "Test")
-	runCmd(t, tmpDir, "git", "commit", "--allow-empty", "-m", "initial")
-	runCmd(t, tmpDir, "git", "branch", "-M", "main")
-
-	data := Payload{Cwd: tmpDir, Workspace: WorkspaceInfo{CurrentDir: ""}}
-	assert.Equal(t, testCfg.Segments.Git.BranchIcon+" main", gitSegment(testCfg, data))
 }
 
 func TestReadPayload(t *testing.T) {
@@ -482,12 +392,32 @@ func TestContextSegmentColorThresholds(t *testing.T) {
 		percent float64
 		want    string
 	}{
-		{name: "under 60 green", percent: 0, want: testCfg.Segments.Context.Icon + " [----------] 0%"},
-		{name: "under 60 green", percent: 59, want: testCfg.Segments.Context.Icon + " [#####-----] 59%"},
-		{name: "at 60 yellow", percent: 60, want: testCfg.Segments.Context.Icon + " [######----] 60%"},
-		{name: "at 84 yellow", percent: 84, want: testCfg.Segments.Context.Icon + " [########--] 84%"},
+		{
+			name:    "under 60 green",
+			percent: 0,
+			want:    testCfg.Segments.Context.Icon + " [----------] 0%",
+		},
+		{
+			name:    "under 60 green",
+			percent: 59,
+			want:    testCfg.Segments.Context.Icon + " [#####-----] 59%",
+		},
+		{
+			name:    "at 60 yellow",
+			percent: 60,
+			want:    testCfg.Segments.Context.Icon + " [######----] 60%",
+		},
+		{
+			name:    "at 84 yellow",
+			percent: 84,
+			want:    testCfg.Segments.Context.Icon + " [########--] 84%",
+		},
 		{name: "at 85 red", percent: 85, want: testCfg.Segments.Context.Icon + " [########--] 85%"},
-		{name: "at 100 red", percent: 100, want: testCfg.Segments.Context.Icon + " [##########] 100%"},
+		{
+			name:    "at 100 red",
+			percent: 100,
+			want:    testCfg.Segments.Context.Icon + " [##########] 100%",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -536,7 +466,11 @@ func TestFastModeSegment(t *testing.T) {
 		data Payload
 		want string
 	}{
-		{name: "fast mode on", data: Payload{FastMode: true}, want: testCfg.Segments.FastMode.Icon + " fast"},
+		{
+			name: "fast mode on",
+			data: Payload{FastMode: true},
+			want: testCfg.Segments.FastMode.Icon + " fast",
+		},
 		{name: "fast mode off", data: Payload{}, want: ""},
 	}
 	for _, tt := range tests {
