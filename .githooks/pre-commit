@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -ueo pipefail
+
+go fix ./... || exit 1
+go test ./... || exit 1
+go vet ./... || exit 1
+go build -o /dev/null . || exit 1
+
+gitleaks git --verbose
