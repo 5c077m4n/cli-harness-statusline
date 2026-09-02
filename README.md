@@ -26,14 +26,14 @@ All fields are optional — any omitted field falls back to its default.
   "segments": {
     "model": { "disable": false, "icon": "󰚩" }, // Show current AI model name
     "folder": { "disable": false, "icon": "󰉋" }, // Show working directory name
-    "git": { "disable": false, "icon": "󰊢", "branch": "󰊢" }, // Show git branch and dirty state
+    "git": { "disable": false, "branch": "󰊢" }, // Show git branch and dirty state
     "worktree": { "disable": false, "icon": "󰙅" }, // Show git worktree name
     "pr": { "disable": false, "icon": "󰐃" }, // Show PR number and review state
     "agent": { "disable": false, "icon": "󰀈" }, // Show active agent name
     "session": { "disable": false, "icon": "󰋩" }, // Show session name (truncated)
     "context": { "disable": false, "icon": "󰧑" }, // Show context usage bar and percentage
-    "cost": { "disable": false, "icon": "󰆛", "duration": "󱎫", "lines": "󰆓" }, // Show total cost, duration, lines
-    "token": { "disable": false, "icon": "󰹑", "tokens": "󰹑" }, // Show input/output token counts
+    "cost": { "disable": false, "duration": "󱎫", "lines": "󰆓" }, // Show total cost, duration, lines
+    "token": { "disable": false, "tokens": "󰹑", "iconIn": "↑", "iconOut": "↓" }, // Show input/output token counts
     "cache": { "disable": false, "icon": "󰚩" }, // Show cache status and hit ratio
     "vim": {
       "disable": false,
