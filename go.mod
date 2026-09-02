@@ -1,4 +1,4 @@
-module github.com/5c077m4n/cursor-agent-statusline
+module github.com/5c077m4n/cli-harness-statusline
 
 go 1.27.0
 

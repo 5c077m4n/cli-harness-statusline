@@ -18,9 +18,8 @@ curl -sL https://raw.githubusercontent.com/5c077m4n/cli-harness-statusline/refs/
 
 ## Configuration
 
-The statusline is configured via
-`~/.config/cursor-agent-statusline/config.json`. All fields are optional — any
-omitted field falls back to its default.
+The statusline is configured via `~/.config/cli-harness-statusline/config.json`.
+All fields are optional — any omitted field falls back to its default.
 
 ```json
 {
@@ -64,5 +63,5 @@ omitted field falls back to its default.
 ## Benchmarks (using [hyperfine](https://github.com/sharkdp/hyperfine))
 
 See the latest results in
-[CI run](https://github.com/5c077m4n/cursor-agent-statusline/actions/workflows/ci.yaml?query=branch%3Amaster)
+[CI run](https://github.com/5c077m4n/cli-harness-statusline/actions/workflows/ci.yaml?query=branch%3Amaster)
 under the Benchmarks step summary.
