@@ -73,7 +73,6 @@ func readPayload() Payload {
 
 func render(cfg *Config, data Payload) string {
 	segments := []string{
-		strings.Repeat("\n", cfg.Padding.Top),
 		modelSegment(cfg, data),
 		folderSegment(cfg, data),
 		gitSegment(cfg, data),
@@ -93,7 +92,6 @@ func render(cfg *Config, data Payload) string {
 		thinkingSegment(cfg, data),
 		rateLimitSegment(cfg, data),
 		exceedsSegment(cfg, data),
-		strings.Repeat("\n", cfg.Padding.Bottom),
 	}
 
 	var nonEmpty []string
@@ -119,5 +117,11 @@ func main() {
 		slog.String("output", line),
 	)
 
+	for range cfg.Padding.Top {
+		fmt.Println("")
+	}
 	fmt.Println(line)
+	for range cfg.Padding.Bottom {
+		fmt.Println("")
+	}
 }
