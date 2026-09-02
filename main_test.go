@@ -111,7 +111,7 @@ func TestMainFullPayload(t *testing.T) {
 	)
 	assert.Contains(t, output, testCfg.Segments.Context.Icon+" [###-------] 35%")
 	assert.Contains(t, output, testCfg.Segments.Cost.Icon+" $0.05")
-	assert.Contains(t, output, testCfg.Segments.Token.TokensIcon+" 15k/1k")
+	assert.Contains(t, output, testCfg.Segments.Token.IconIn+"15k "+testCfg.Segments.Token.IconOut+"1k")
 	assert.Contains(t, output, testCfg.Segments.Cache.Icon+" ")
 	assert.Contains(t, output, "warm")
 	assert.Contains(t, output, "91%")

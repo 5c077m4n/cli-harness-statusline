@@ -349,7 +349,7 @@ func token(cfg *config.Config, data types.Payload) string {
 	}
 	in := data.ContextWindow.TotalInputTokens
 	out := data.ContextWindow.TotalOutputTokens
-	return colorDim.Sprintf("%s %dk/%dk", cfg.Segments.Token.TokensIcon, in/1000, out/1000)
+	return colorDim.Sprintf("%s%dk %s%dk", cfg.Segments.Token.IconIn, in/1000, cfg.Segments.Token.IconOut, out/1000)
 }
 
 func cache(cfg *config.Config, data types.Payload) string {
