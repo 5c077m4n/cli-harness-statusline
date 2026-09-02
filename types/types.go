@@ -1,8 +1,9 @@
+// Package types used in this project
 package types
 
 type (
 	ModelInfo struct {
-		Id          string `json:"id"`
+		ID          string `json:"id"`
 		DisplayName string `json:"display_name"`
 		MaxMode     bool   `json:"max_mode"`
 	}
@@ -42,7 +43,7 @@ type (
 	CostInfo struct {
 		TotalCostUSD       *float64 `json:"total_cost_usd"`
 		TotalDurationMs    float64  `json:"total_duration_ms"`
-		TotalApiDurationMs float64  `json:"total_api_duration_ms"`
+		TotalAPIDurationMs float64  `json:"total_api_duration_ms"`
 		TotalLinesAdded    int      `json:"total_lines_added"`
 		TotalLinesRemoved  int      `json:"total_lines_removed"`
 	}
@@ -67,7 +68,7 @@ type (
 	PromptCacheInfo struct {
 		Warm                bool     `json:"warm"`
 		CachingObserved     bool     `json:"caching_observed"`
-		Ttl                 string   `json:"ttl"`
+		TTL                 string   `json:"ttl"`
 		ExpiresAt           string   `json:"expires_at"`
 		Requests            int      `json:"requests"`
 		Misses              int      `json:"misses"`
@@ -92,9 +93,9 @@ type (
 	}
 	Payload struct {
 		Cwd            string            `json:"cwd"`
-		SessionId      string            `json:"session_id"`
+		SessionID      string            `json:"session_id"`
 		SessionName    string            `json:"session_name"`
-		PromptId       string            `json:"prompt_id"`
+		PromptID       string            `json:"prompt_id"`
 		TranscriptPath string            `json:"transcript_path"`
 		Version        string            `json:"version"`
 		Autorun        bool              `json:"autorun"`
