@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BIN_NAME="cursor-agent-statusline"
+BIN_NAME="cli-harness-statusline"
 REPO="5c077m4n/${BIN_NAME}"
 
 # --- Resolve install dirs ---
@@ -39,7 +39,8 @@ else
 	FILENAME="${BIN_NAME}_${VERSION}_${PLATFORM}.tar.gz"
 	URL="https://github.com/${REPO}/releases/download/${LATEST}/${FILENAME}"
 
-	mkdir -p "$CURSOR_CONFIG"
+	LOCAL_BIN="$HOME/.local/bin"
+	mkdir -p "$LOCAL_BIN"
 
 	TMP_DIR=$(mktemp -d)
 	trap 'rm -rf "$TMP_DIR"' EXIT
@@ -47,9 +48,9 @@ else
 	echo "Downloading $FILENAME ..."
 	curl -sL "$URL" -o "$TMP_DIR/$FILENAME"
 	tar -xzf "$TMP_DIR/$FILENAME" -C "$TMP_DIR"
-	mv "$TMP_DIR/$BIN_NAME" "$CURSOR_CONFIG/"
-	chmod u+x "$CURSOR_CONFIG/$BIN_NAME"
-	BIN_PATH="$CURSOR_CONFIG/$BIN_NAME"
+	mv "$TMP_DIR/$BIN_NAME" "$LOCAL_BIN/"
+	chmod u+x "$LOCAL_BIN/$BIN_NAME"
+	BIN_PATH="$LOCAL_BIN/$BIN_NAME"
 fi
 
 echo "Binary installed at: $BIN_PATH"
