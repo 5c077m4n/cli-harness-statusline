@@ -9,7 +9,7 @@ A minimal and functional statusline for
 ### One-liner (auto-detects Go vs release)
 
 ```bash
-curl -sL https://raw.githubusercontent.com/5c077m4n/cursor-agent-statusline/master/install.sh | bash
+curl -sL https://raw.githubusercontent.com/5c077m4n/cli-harness-statusline/refs/heads/master/install.sh | bash
 ```
 
 > [!IMPORTANT]
