@@ -49,10 +49,7 @@ All fields are optional — any omitted field falls back to its default.
     "rateLimit": { "disable": false, "icon": "󰌉" }, // Show rate limit usage percentages
     "exceeds": { "disable": false, "icon": "󰄘" } // Show 200k+ context warning marker
   },
-  "padding": {
-    "top": 1,
-    "bottom": 1
-  } // Number of blank lines above/below the statusline (default: 0)
+  "padding": { "top": 0, "bottom": 0 } // Number of blank lines above/below the statusline
 }
 ```
 
