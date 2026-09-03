@@ -11,65 +11,34 @@ import (
 	"github.com/knadh/koanf/v2"
 )
 
-type Segment struct {
-	Disable bool   `json:"disable"`
-	Icon    string `json:"icon"`
+type SegmentConfig struct {
+	Disable bool `json:"disable"`
 }
-
-type VimSegment struct {
-	Disable    bool   `json:"disable"`
-	Icon       string `json:"icon"`
-	IconInsert string `json:"iconInsert"`
-	IconNormal string `json:"iconNormal"`
-}
-
-type GitSegment struct {
-	Disable    bool   `json:"disable"`
-	Icon       string `json:"icon"`
-	BranchIcon string `json:"branch"`
-}
-
-type CostSegment struct {
-	Disable      bool   `json:"disable"`
-	Icon         string `json:"icon"`
-	DurationIcon string `json:"duration"`
-	LinesIcon    string `json:"lines"`
-}
-
-type TokenSegment struct {
-	Disable   bool   `json:"disable"`
-	TokenIcon string `json:"icon"`
-	IconIn    string `json:"iconIn"`
-	IconOut   string `json:"iconOut"`
-}
-
 type SegmentsConfig struct {
-	Model     Segment      `json:"model"`
-	Folder    Segment      `json:"folder"`
-	Git       GitSegment   `json:"git"`
-	Worktree  Segment      `json:"worktree"`
-	PR        Segment      `json:"pr"`
-	Agent     Segment      `json:"agent"`
-	Session   Segment      `json:"session"`
-	Context   Segment      `json:"context"`
-	Cost      CostSegment  `json:"cost"`
-	Token     TokenSegment `json:"token"`
-	Cache     Segment      `json:"cache"`
-	Vim       VimSegment   `json:"vim"`
-	Autorun   Segment      `json:"autorun"`
-	Max       Segment      `json:"max"`
-	FastMode  Segment      `json:"fastMode"`
-	Effort    Segment      `json:"effort"`
-	Thinking  Segment      `json:"thinking"`
-	RateLimit Segment      `json:"rateLimit"`
-	Exceeds   Segment      `json:"exceeds"`
+	Model     SegmentConfig `json:"model"`
+	Folder    SegmentConfig `json:"folder"`
+	Git       SegmentConfig `json:"git"`
+	Worktree  SegmentConfig `json:"worktree"`
+	PR        SegmentConfig `json:"pr"`
+	Agent     SegmentConfig `json:"agent"`
+	Session   SegmentConfig `json:"session"`
+	Context   SegmentConfig `json:"context"`
+	Cost      SegmentConfig `json:"cost"`
+	Token     SegmentConfig `json:"token"`
+	Cache     SegmentConfig `json:"cache"`
+	Vim       SegmentConfig `json:"vim"`
+	Autorun   SegmentConfig `json:"autorun"`
+	Max       SegmentConfig `json:"max"`
+	FastMode  SegmentConfig `json:"fastMode"`
+	Effort    SegmentConfig `json:"effort"`
+	Thinking  SegmentConfig `json:"thinking"`
+	RateLimit SegmentConfig `json:"rateLimit"`
+	Exceeds   SegmentConfig `json:"exceeds"`
 }
-
 type Padding struct {
 	Top    int `json:"top"`
 	Bottom int `json:"bottom"`
 }
-
 type Config struct {
 	Segments SegmentsConfig `json:"segments"`
 	Padding  Padding        `json:"padding"`
@@ -88,29 +57,7 @@ func configDir() string {
 }
 
 func Load() *Config {
-	cfg := &Config{
-		Segments: SegmentsConfig{
-			Model:     Segment{Icon: "󰚩"},
-			Folder:    Segment{Icon: "󰉋"},
-			Git:       GitSegment{BranchIcon: "󰊢"},
-			Worktree:  Segment{Icon: "󰙅"},
-			Context:   Segment{Icon: "󰧑"},
-			Cost:      CostSegment{DurationIcon: "󱎫", LinesIcon: "󰆓"},
-			Vim:       VimSegment{Icon: "󰌌", IconInsert: "󰏫", IconNormal: "󰌌"},
-			Autorun:   Segment{Icon: "󰄙"},
-			Max:       Segment{Icon: "󰓅"},
-			Session:   Segment{Icon: "󰋩"},
-			FastMode:  Segment{Icon: "⚡"},
-			Effort:    Segment{Icon: "󰗡"},
-			Thinking:  Segment{Icon: "󰜗"},
-			PR:        Segment{Icon: "󰐃"},
-			Agent:     Segment{Icon: "󰀈"},
-			RateLimit: Segment{Icon: "󰌉"},
-			Cache:     Segment{Icon: "󰋊"},
-			Token:     TokenSegment{TokenIcon: "󰹑", IconIn: "↓", IconOut: "↑"},
-			Exceeds:   Segment{Icon: "󰄘"},
-		},
-	}
+	cfg := &Config{}
 
 	dir := configDir()
 	if dir == "" {

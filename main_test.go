@@ -6,24 +6,11 @@ import (
 	"os/exec"
 	"testing"
 
-	"github.com/5c077m4n/cli-harness-statusline/config"
+	"github.com/5c077m4n/cli-harness-statusline/segments"
 	"github.com/fatih/color"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
-
-var testCfg *config.Config
-
-const (
-	_osc8Start = "\033]8;;"
-	_osc8Sep   = "\033\\"
-	_osc8End   = "\033]8;;\033\\"
-)
-
-func init() {
-	color.NoColor = true
-	testCfg = config.Load()
-}
 
 func TestReadPayload(t *testing.T) {
 	oldStdin := os.Stdin
@@ -122,32 +109,32 @@ func TestMainFullPayload(t *testing.T) {
 	require.NoError(t, err)
 	output := buf.String()
 
-	assert.Contains(t, output, testCfg.Segments.Model.Icon+" claude-sonnet-4-20250514")
-	assert.Contains(t, output, testCfg.Segments.Folder.Icon+" my-project")
-	assert.Contains(t, output, testCfg.Segments.Agent.Icon+" security-reviewer")
-	assert.Contains(t, output, testCfg.Segments.Worktree.Icon+" my-feature")
-	assert.Contains(t, output, testCfg.Segments.Session.Icon+" my-session")
+	assert.Contains(t, output, segments.IconModel+" claude-sonnet-4-20250514")
+	assert.Contains(t, output, segments.IconFolder+" my-project")
+	assert.Contains(t, output, segments.IconAgent+" security-reviewer")
+	assert.Contains(t, output, segments.IconWorktree+" my-feature")
+	assert.Contains(t, output, segments.IconSession+" my-session")
 	assert.Contains(
 		t,
 		output,
-		testCfg.Segments.PR.Icon+" "+_osc8Start+"https://github.com/anthropics/claude-code/pull/1234"+_osc8Sep+"#1234",
+		segments.IconPR+" "+segments.OSC8Start+"https://github.com/anthropics/claude-code/pull/1234"+segments.OSC8Sep+"#1234",
 	)
-	assert.Contains(t, output, testCfg.Segments.Context.Icon+" [###-------] 35%")
-	assert.Contains(t, output, testCfg.Segments.Cost.Icon+" $0.05")
+	assert.Contains(t, output, segments.IconContext+" [###-------] 35%")
+	assert.Contains(t, output, segments.IconCost+" $0.05")
 	assert.Contains(
 		t,
 		output,
-		testCfg.Segments.Token.IconIn+"15k "+testCfg.Segments.Token.IconOut+"1k",
+		segments.IconTokenIn+"15k "+segments.IconTokenOut+"1k",
 	)
-	assert.Contains(t, output, testCfg.Segments.Cache.Icon+" ")
+	assert.Contains(t, output, segments.IconCache+" ")
 	assert.Contains(t, output, "warm")
 	assert.Contains(t, output, "91%")
-	assert.Contains(t, output, testCfg.Segments.Vim.IconInsert)
-	assert.Contains(t, output, testCfg.Segments.Autorun.Icon+" auto")
-	assert.Contains(t, output, testCfg.Segments.FastMode.Icon+" fast")
-	assert.Contains(t, output, testCfg.Segments.Effort.Icon+" high")
-	assert.Contains(t, output, testCfg.Segments.Thinking.Icon+" think")
-	assert.Contains(t, output, testCfg.Segments.RateLimit.Icon+" 5h:24% 7d:41% $:63%")
+	assert.Contains(t, output, segments.IconVimInsert)
+	assert.Contains(t, output, segments.IconAutorun+" auto")
+	assert.Contains(t, output, segments.IconFastMode+" fast")
+	assert.Contains(t, output, segments.IconEffort+" high")
+	assert.Contains(t, output, segments.IconThinking+" think")
+	assert.Contains(t, output, segments.IconRateLimit+" 5h:24% 7d:41% $:63%")
 }
 
 func TestMainIntegration(t *testing.T) {
@@ -181,11 +168,11 @@ func TestMainIntegration(t *testing.T) {
 	require.NoError(t, err)
 	output := buf.String()
 
-	assert.Contains(t, output, testCfg.Segments.Model.Icon+" claude-sonnet-4-20250514")
-	assert.Contains(t, output, testCfg.Segments.Folder.Icon+" my-project")
-	assert.Contains(t, output, testCfg.Segments.Context.Icon+" [###-------] 35%")
-	assert.Contains(t, output, testCfg.Segments.Cost.Icon+" $0.05")
-	assert.Contains(t, output, testCfg.Segments.Vim.IconInsert)
-	assert.Contains(t, output, testCfg.Segments.Autorun.Icon+" auto")
-	assert.NotContains(t, output, testCfg.Segments.Max.Icon+" max")
+	assert.Contains(t, output, segments.IconModel+" claude-sonnet-4-20250514")
+	assert.Contains(t, output, segments.IconFolder+" my-project")
+	assert.Contains(t, output, segments.IconContext+" [###-------] 35%")
+	assert.Contains(t, output, segments.IconCost+" $0.05")
+	assert.Contains(t, output, segments.IconVimInsert)
+	assert.Contains(t, output, segments.IconAutorun+" auto")
+	assert.NotContains(t, output, segments.IconMax+" max")
 }
