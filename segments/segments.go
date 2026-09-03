@@ -28,9 +28,36 @@ var (
 )
 
 const (
-	osc8Start = "\033]8;;"
-	osc8Sep   = "\033\\"
-	osc8End   = "\033]8;;\033\\"
+	OSC8Start = "\033]8;;"
+	OSC8Sep   = "\033\\"
+	OSC8End   = "\033]8;;\033\\"
+
+	// Icon constants
+	IconModel     = "󰚩"
+	IconFolder    = "󰉋"
+	IconGitBranch = "󰊢"
+	IconWorktree  = "󰙅"
+	IconContext   = "󰧑"
+	IconCost      = ""
+	IconDuration  = "󱎫"
+	IconLines     = "󰆓"
+	IconVimNormal = "󰌌"
+	IconVimInsert = "󰏫"
+	IconAutorun   = "󰄙"
+	IconMax       = "󰓅"
+	IconSession   = "󰋩"
+	IconFastMode  = "⚡"
+	IconEffort    = "󰗡"
+	IconThinking  = "󰜗"
+	IconPR        = "󰐃"
+	IconAgent     = "󰀈"
+	IconRateLimit = "󰌉"
+	IconCache     = "󰋊"
+	IconTokenIn   = "↓"
+	IconTokenOut  = "↑"
+	IconExceeds   = "󰄘"
+	barFilled     = "#"
+	barEmpty      = "-"
 )
 
 func usedPct(pct *float64) float64 {
@@ -96,7 +123,7 @@ func model(cfg *config.Config, data types.Payload) string {
 	if name == "" {
 		name = "unknown"
 	}
-	return colorBlue.Add(color.Bold).Sprintf("%s %s", cfg.Segments.Model.Icon, name)
+	return colorBlue.Add(color.Bold).Sprintf("%s %s", IconModel, name)
 }
 
 func folder(cfg *config.Config, data types.Payload) string {
@@ -116,7 +143,7 @@ func folder(cfg *config.Config, data types.Payload) string {
 		folder = "/"
 	}
 
-	return colorDim.Sprintf("%s %s", cfg.Segments.Folder.Icon, folder)
+	return colorDim.Sprintf("%s %s", IconFolder, folder)
 }
 
 func git(cfg *config.Config, data types.Payload) string {
@@ -136,7 +163,7 @@ func git(cfg *config.Config, data types.Payload) string {
 		return ""
 	}
 
-	segment := colorMagenta.Sprintf("%s %s", cfg.Segments.Git.BranchIcon, branch)
+	segment := colorMagenta.Sprintf("%s %s", IconGitBranch, branch)
 	if dirty {
 		segment += colorYellow.Sprint("*")
 	}
@@ -151,7 +178,7 @@ func worktree(cfg *config.Config, data types.Payload) string {
 	if data.Worktree.Name == "" {
 		return ""
 	}
-	return colorDim.Sprintf("%s %s", cfg.Segments.Worktree.Icon, data.Worktree.Name)
+	return colorDim.Sprintf("%s %s", IconWorktree, data.Worktree.Name)
 }
 
 func context(cfg *config.Config, data types.Payload) string {
@@ -169,8 +196,8 @@ func context(cfg *config.Config, data types.Payload) string {
 		selectedColor = colorYellow
 	}
 
-	bar := strings.Repeat("#", filled) + strings.Repeat("-", 10-filled)
-	return selectedColor.Sprintf("%s [%s] %.0f%%", cfg.Segments.Context.Icon, bar, percent)
+	bar := strings.Repeat(barFilled, filled) + strings.Repeat(barEmpty, 10-filled)
+	return selectedColor.Sprintf("%s [%s] %.0f%%", IconContext, bar, percent)
 }
 
 func cost(cfg *config.Config, data types.Payload) string {
@@ -180,19 +207,19 @@ func cost(cfg *config.Config, data types.Payload) string {
 	if data.Cost.TotalCostUSD == nil {
 		return ""
 	}
-	segment := colorDim.Sprintf("%s $%.2f", cfg.Segments.Cost.Icon, *data.Cost.TotalCostUSD)
+	segment := colorDim.Sprintf("%s $%.2f", IconCost, *data.Cost.TotalCostUSD)
 
 	if data.Cost.TotalDurationMs > 0 {
 		totalSecs := int64(data.Cost.TotalDurationMs / 1000)
 		mins := totalSecs / 60
 		secs := totalSecs % 60
-		segment += colorDim.Sprintf(" %s%dm%ds", cfg.Segments.Cost.DurationIcon, mins, secs)
+		segment += colorDim.Sprintf(" %s%dm%ds", IconDuration, mins, secs)
 	}
 
 	if data.Cost.TotalLinesAdded > 0 || data.Cost.TotalLinesRemoved > 0 {
 		segment += colorDim.Sprintf(
 			" %s+%d-%d",
-			cfg.Segments.Cost.LinesIcon,
+			IconLines,
 			data.Cost.TotalLinesAdded,
 			data.Cost.TotalLinesRemoved,
 		)
@@ -209,9 +236,9 @@ func vim(cfg *config.Config, data types.Payload) string {
 		return ""
 	}
 
-	icon := cfg.Segments.Vim.IconNormal
+	icon := IconVimNormal
 	if data.Vim.Mode == "INSERT" {
-		icon = cfg.Segments.Vim.IconInsert
+		icon = IconVimInsert
 	}
 
 	return colorDim.Sprintf("%s ", icon)
@@ -224,7 +251,7 @@ func autorun(cfg *config.Config, data types.Payload) string {
 	if !data.Autorun {
 		return ""
 	}
-	return colorYellow.Sprintf("%s auto", cfg.Segments.Autorun.Icon)
+	return colorYellow.Sprintf("%s auto", IconAutorun)
 }
 
 func max(cfg *config.Config, data types.Payload) string {
@@ -234,7 +261,7 @@ func max(cfg *config.Config, data types.Payload) string {
 	if !data.Model.MaxMode {
 		return ""
 	}
-	return colorYellow.Sprintf("%s max", cfg.Segments.Max.Icon)
+	return colorYellow.Sprintf("%s max", IconMax)
 }
 
 func fastMode(cfg *config.Config, data types.Payload) string {
@@ -244,7 +271,7 @@ func fastMode(cfg *config.Config, data types.Payload) string {
 	if !data.FastMode {
 		return ""
 	}
-	return colorCyan.Sprintf("%s fast", cfg.Segments.FastMode.Icon)
+	return colorCyan.Sprintf("%s fast", IconFastMode)
 }
 
 func effort(cfg *config.Config, data types.Payload) string {
@@ -254,7 +281,7 @@ func effort(cfg *config.Config, data types.Payload) string {
 	if data.Effort == nil || data.Effort.Level == "" {
 		return ""
 	}
-	return colorDim.Sprintf("%s %s", cfg.Segments.Effort.Icon, data.Effort.Level)
+	return colorDim.Sprintf("%s %s", IconEffort, data.Effort.Level)
 }
 
 func thinking(cfg *config.Config, data types.Payload) string {
@@ -264,7 +291,7 @@ func thinking(cfg *config.Config, data types.Payload) string {
 	if data.Thinking == nil || !data.Thinking.Enabled {
 		return ""
 	}
-	return colorDim.Sprintf("%s think", cfg.Segments.Thinking.Icon)
+	return colorDim.Sprintf("%s think", IconThinking)
 }
 
 func session(cfg *config.Config, data types.Payload) string {
@@ -278,7 +305,7 @@ func session(cfg *config.Config, data types.Payload) string {
 	if len(name) > 24 {
 		name = name[:24] + "…"
 	}
-	return colorDim.Sprintf("%s %s", cfg.Segments.Session.Icon, name)
+	return colorDim.Sprintf("%s %s", IconSession, name)
 }
 
 func pr(cfg *config.Config, data types.Payload) string {
@@ -302,9 +329,9 @@ func pr(cfg *config.Config, data types.Payload) string {
 		}
 	}
 	if data.PR.URL != "" {
-		label = strings.Join([]string{osc8Start, data.PR.URL, osc8Sep, label, osc8End}, "")
+		label = strings.Join([]string{OSC8Start, data.PR.URL, OSC8Sep, label, OSC8End}, "")
 	}
-	return colorMagenta.Sprintf("%s %s", cfg.Segments.PR.Icon, label)
+	return colorMagenta.Sprintf("%s %s", IconPR, label)
 }
 
 func agent(cfg *config.Config, data types.Payload) string {
@@ -314,7 +341,7 @@ func agent(cfg *config.Config, data types.Payload) string {
 	if data.Agent == nil || data.Agent.Name == "" {
 		return ""
 	}
-	return colorDim.Sprintf("%s %s", cfg.Segments.Agent.Icon, data.Agent.Name)
+	return colorDim.Sprintf("%s %s", IconAgent, data.Agent.Name)
 }
 
 func rateLimit(cfg *config.Config, data types.Payload) string {
@@ -337,7 +364,7 @@ func rateLimit(cfg *config.Config, data types.Payload) string {
 	if len(parts) == 0 {
 		return ""
 	}
-	return colorDim.Sprintf("%s %s", cfg.Segments.RateLimit.Icon, strings.Join(parts, " "))
+	return colorDim.Sprintf("%s %s", IconRateLimit, strings.Join(parts, " "))
 }
 
 func token(cfg *config.Config, data types.Payload) string {
@@ -349,7 +376,7 @@ func token(cfg *config.Config, data types.Payload) string {
 	}
 	in := data.ContextWindow.TotalInputTokens
 	out := data.ContextWindow.TotalOutputTokens
-	return colorDim.Sprintf("%s%dk %s%dk", cfg.Segments.Token.IconIn, in/1000, cfg.Segments.Token.IconOut, out/1000)
+	return colorDim.Sprintf("%s%dk %s%dk", IconTokenIn, in/1000, IconTokenOut, out/1000)
 }
 
 func cache(cfg *config.Config, data types.Payload) string {
@@ -369,7 +396,7 @@ func cache(cfg *config.Config, data types.Payload) string {
 		hit := math.Floor(*data.PromptCache.HitRatio * 100)
 		label += fmt.Sprintf(" %.0f%%", hit)
 	}
-	return colorDim.Sprintf("%s %s", cfg.Segments.Cache.Icon, label)
+	return colorDim.Sprintf("%s %s", IconCache, label)
 }
 
 func exceeds(cfg *config.Config, data types.Payload) string {
@@ -379,7 +406,7 @@ func exceeds(cfg *config.Config, data types.Payload) string {
 	if !data.Exceeds200k {
 		return ""
 	}
-	return colorYellow.Sprintf("%s >200k", cfg.Segments.Exceeds.Icon)
+	return colorYellow.Sprintf("%s >200k", IconExceeds)
 }
 
 func Render(cfg *config.Config, data types.Payload) string {

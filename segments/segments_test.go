@@ -31,12 +31,12 @@ func TestModel(t *testing.T) {
 		{
 			name: "with display name",
 			data: types.Payload{Model: types.ModelInfo{DisplayName: "gpt-4"}},
-			want: testCfg.Segments.Model.Icon + " gpt-4",
+			want: IconModel + " gpt-4",
 		},
 		{
 			name: "empty display name",
 			data: types.Payload{},
-			want: testCfg.Segments.Model.Icon + " unknown",
+			want: IconModel + " unknown",
 		},
 	}
 	for _, tt := range tests {
@@ -55,27 +55,27 @@ func TestFolder(t *testing.T) {
 		{
 			name: "current dir set",
 			data: types.Payload{Workspace: types.WorkspaceInfo{CurrentDir: "/home/user/project"}},
-			want: testCfg.Segments.Folder.Icon + " project",
+			want: IconFolder + " project",
 		},
 		{
 			name: "falls back to cwd",
 			data: types.Payload{Cwd: "/home/user/other"},
-			want: testCfg.Segments.Folder.Icon + " other",
+			want: IconFolder + " other",
 		},
 		{
 			name: "both empty maps to root",
 			data: types.Payload{},
-			want: testCfg.Segments.Folder.Icon + " /",
+			want: IconFolder + " /",
 		},
 		{
 			name: "root path",
 			data: types.Payload{Workspace: types.WorkspaceInfo{CurrentDir: "/"}},
-			want: testCfg.Segments.Folder.Icon + " /",
+			want: IconFolder + " /",
 		},
 		{
 			name: "dot path maps to root",
 			data: types.Payload{Workspace: types.WorkspaceInfo{CurrentDir: "."}},
-			want: testCfg.Segments.Folder.Icon + " /",
+			want: IconFolder + " /",
 		},
 	}
 	for _, tt := range tests {
@@ -94,7 +94,7 @@ func TestWorktree(t *testing.T) {
 		{
 			name: "with worktree name",
 			data: types.Payload{Worktree: types.WorktreeInfo{Name: "feature-branch"}},
-			want: testCfg.Segments.Worktree.Icon + " feature-branch",
+			want: IconWorktree + " feature-branch",
 		},
 		{name: "empty worktree name", data: types.Payload{}, want: ""},
 	}
@@ -114,32 +114,32 @@ func TestContext(t *testing.T) {
 		{
 			name: "0 percent",
 			data: types.Payload{ContextWindow: types.ContextWindowInfo{UsedPercentage: new(0.0)}},
-			want: testCfg.Segments.Context.Icon + " [----------] 0%",
+			want: IconContext + " [----------] 0%",
 		},
 		{
 			name: "50 percent",
 			data: types.Payload{ContextWindow: types.ContextWindowInfo{UsedPercentage: new(50.0)}},
-			want: testCfg.Segments.Context.Icon + " [#####-----] 50%",
+			want: IconContext + " [#####-----] 50%",
 		},
 		{
 			name: "100 percent",
 			data: types.Payload{ContextWindow: types.ContextWindowInfo{UsedPercentage: new(100.0)}},
-			want: testCfg.Segments.Context.Icon + " [##########] 100%",
+			want: IconContext + " [##########] 100%",
 		},
 		{
 			name: "negative percent",
 			data: types.Payload{ContextWindow: types.ContextWindowInfo{UsedPercentage: new(-10.0)}},
-			want: testCfg.Segments.Context.Icon + " [----------] -10%",
+			want: IconContext + " [----------] -10%",
 		},
 		{
 			name: "over 100 percent",
 			data: types.Payload{ContextWindow: types.ContextWindowInfo{UsedPercentage: new(150.0)}},
-			want: testCfg.Segments.Context.Icon + " [##########] 150%",
+			want: IconContext + " [##########] 150%",
 		},
 		{
 			name: "fractional percent floors",
 			data: types.Payload{ContextWindow: types.ContextWindowInfo{UsedPercentage: new(59.9)}},
-			want: testCfg.Segments.Context.Icon + " [#####-----] 59%",
+			want: IconContext + " [#####-----] 59%",
 		},
 	}
 	for _, tt := range tests {
@@ -158,12 +158,12 @@ func TestCost(t *testing.T) {
 		{
 			name: "with cost",
 			data: types.Payload{Cost: types.CostInfo{TotalCostUSD: new(0.42)}},
-			want: testCfg.Segments.Cost.Icon + " $0.42",
+			want: IconCost + " $0.42",
 		},
 		{
 			name: "zero cost",
 			data: types.Payload{Cost: types.CostInfo{TotalCostUSD: new(0.0)}},
-			want: testCfg.Segments.Cost.Icon + " $0.00",
+			want: IconCost + " $0.00",
 		},
 		{name: "nil cost", data: types.Payload{}, want: ""},
 	}
@@ -183,12 +183,12 @@ func TestVim(t *testing.T) {
 		{
 			name: "insert mode",
 			data: types.Payload{Vim: types.VimInfo{Mode: "INSERT"}},
-			want: testCfg.Segments.Vim.IconInsert + " ",
+			want: IconVimInsert + " ",
 		},
 		{
 			name: "normal mode",
 			data: types.Payload{Vim: types.VimInfo{Mode: "NORMAL"}},
-			want: testCfg.Segments.Vim.IconNormal + " ",
+			want: IconVimNormal + " ",
 		},
 		{name: "empty mode", data: types.Payload{}, want: ""},
 	}
@@ -208,7 +208,7 @@ func TestAutorun(t *testing.T) {
 		{
 			name: "autorun on",
 			data: types.Payload{Autorun: true},
-			want: testCfg.Segments.Autorun.Icon + " auto",
+			want: IconAutorun + " auto",
 		},
 		{name: "autorun off", data: types.Payload{}, want: ""},
 	}
@@ -228,7 +228,7 @@ func TestMax(t *testing.T) {
 		{
 			name: "max mode on",
 			data: types.Payload{Model: types.ModelInfo{MaxMode: true}},
-			want: testCfg.Segments.Max.Icon + " max",
+			want: IconMax + " max",
 		},
 		{name: "max mode off", data: types.Payload{}, want: ""},
 	}
@@ -259,28 +259,28 @@ func TestContextColorThresholds(t *testing.T) {
 		{
 			name:    "under 60 green",
 			percent: 0,
-			want:    testCfg.Segments.Context.Icon + " [----------] 0%",
+			want:    IconContext + " [----------] 0%",
 		},
 		{
 			name:    "under 60 green",
 			percent: 59,
-			want:    testCfg.Segments.Context.Icon + " [#####-----] 59%",
+			want:    IconContext + " [#####-----] 59%",
 		},
 		{
 			name:    "at 60 yellow",
 			percent: 60,
-			want:    testCfg.Segments.Context.Icon + " [######----] 60%",
+			want:    IconContext + " [######----] 60%",
 		},
 		{
 			name:    "at 84 yellow",
 			percent: 84,
-			want:    testCfg.Segments.Context.Icon + " [########--] 84%",
+			want:    IconContext + " [########--] 84%",
 		},
-		{name: "at 85 red", percent: 85, want: testCfg.Segments.Context.Icon + " [########--] 85%"},
+		{name: "at 85 red", percent: 85, want: IconContext + " [########--] 85%"},
 		{
 			name:    "at 100 red",
 			percent: 100,
-			want:    testCfg.Segments.Context.Icon + " [##########] 100%",
+			want:    IconContext + " [##########] 100%",
 		},
 	}
 	for _, tt := range tests {
@@ -313,7 +313,7 @@ func TestContextBarFilling(t *testing.T) {
 				ContextWindow: types.ContextWindowInfo{UsedPercentage: new(tt.percent)},
 			}
 			got := context(testCfg, data)
-			expectedBar := strings.Repeat("#", tt.filled) + strings.Repeat("-", 10-tt.filled)
+			expectedBar := strings.Repeat(barFilled, tt.filled) + strings.Repeat(barEmpty, 10-tt.filled)
 			assert.Contains(t, got, "["+expectedBar+"]")
 		})
 	}
@@ -328,7 +328,7 @@ func TestFolderCurrentDirPriority(t *testing.T) {
 		Cwd:       "/fallback",
 		Workspace: types.WorkspaceInfo{CurrentDir: "/preferred"},
 	}
-	assert.Equal(t, testCfg.Segments.Folder.Icon+" preferred", folder(testCfg, data))
+	assert.Equal(t, IconFolder+" preferred", folder(testCfg, data))
 }
 
 func TestFastMode(t *testing.T) {
@@ -340,7 +340,7 @@ func TestFastMode(t *testing.T) {
 		{
 			name: "fast mode on",
 			data: types.Payload{FastMode: true},
-			want: testCfg.Segments.FastMode.Icon + " fast",
+			want: IconFastMode + " fast",
 		},
 		{name: "fast mode off", data: types.Payload{}, want: ""},
 	}
@@ -360,7 +360,7 @@ func TestEffort(t *testing.T) {
 		{
 			name: "with effort",
 			data: types.Payload{Effort: &types.EffortInfo{Level: "high"}},
-			want: testCfg.Segments.Effort.Icon + " high",
+			want: IconEffort + " high",
 		},
 		{name: "nil effort", data: types.Payload{}, want: ""},
 		{name: "empty level", data: types.Payload{Effort: &types.EffortInfo{Level: ""}}, want: ""},
@@ -381,7 +381,7 @@ func TestThinking(t *testing.T) {
 		{
 			name: "thinking enabled",
 			data: types.Payload{Thinking: &types.ThinkingInfo{Enabled: true}},
-			want: testCfg.Segments.Thinking.Icon + " think",
+			want: IconThinking + " think",
 		},
 		{
 			name: "thinking disabled",
@@ -406,13 +406,13 @@ func TestSession(t *testing.T) {
 		{
 			name: "with session name",
 			data: types.Payload{SessionName: "my-session"},
-			want: testCfg.Segments.Session.Icon + " my-session",
+			want: IconSession + " my-session",
 		},
 		{name: "empty session name", data: types.Payload{}, want: ""},
 		{
 			name: "truncates long name",
 			data: types.Payload{SessionName: "abcdefghijklmnopqrstuvwxyz123456"},
-			want: testCfg.Segments.Session.Icon + " abcdefghijklmnopqrstuvwx…",
+			want: IconSession + " abcdefghijklmnopqrstuvwx…",
 		},
 	}
 	for _, tt := range tests {
@@ -431,7 +431,7 @@ func TestAgent(t *testing.T) {
 		{
 			name: "with agent",
 			data: types.Payload{Agent: &types.AgentInfo{Name: "reviewer"}},
-			want: testCfg.Segments.Agent.Icon + " reviewer",
+			want: IconAgent + " reviewer",
 		},
 		{name: "nil agent", data: types.Payload{}, want: ""},
 		{name: "empty name", data: types.Payload{Agent: &types.AgentInfo{Name: ""}}, want: ""},
@@ -452,30 +452,30 @@ func TestPR(t *testing.T) {
 		{
 			name: "PR without review state",
 			data: types.Payload{PR: &types.PRInfo{Number: 42, URL: "https://example.com/pr/42"}},
-			want: testCfg.Segments.PR.Icon + " " + osc8Start + "https://example.com/pr/42" + osc8Sep + "#42" + osc8End,
+			want: IconPR + " " + OSC8Start + "https://example.com/pr/42" + OSC8Sep + "#42" + OSC8End,
 		},
 		{name: "nil PR", data: types.Payload{}, want: ""},
 		{
 			name: "PR with approved review",
 			data: types.Payload{PR: &types.PRInfo{Number: 1, ReviewState: new("approved")}},
-			want: testCfg.Segments.PR.Icon + " #1 ✓",
+			want: IconPR + " #1 ✓",
 		},
 		{
 			name: "PR with changes requested",
 			data: types.Payload{
 				PR: &types.PRInfo{Number: 2, ReviewState: new("changes_requested")},
 			},
-			want: testCfg.Segments.PR.Icon + " #2 ✗",
+			want: IconPR + " #2 ✗",
 		},
 		{
 			name: "PR draft",
 			data: types.Payload{PR: &types.PRInfo{Number: 3, ReviewState: new("draft")}},
-			want: testCfg.Segments.PR.Icon + " #3 ○",
+			want: IconPR + " #3 ○",
 		},
 		{
 			name: "PR pending",
 			data: types.Payload{PR: &types.PRInfo{Number: 4, ReviewState: new("pending")}},
-			want: testCfg.Segments.PR.Icon + " #4 ●",
+			want: IconPR + " #4 ●",
 		},
 	}
 	for _, tt := range tests {
@@ -499,7 +499,7 @@ func TestRateLimit(t *testing.T) {
 					FiveHour: &types.RateLimitWindow{UsedPercentage: 23.5},
 				},
 			},
-			want: testCfg.Segments.RateLimit.Icon + " 5h:24%",
+			want: IconRateLimit + " 5h:24%",
 		},
 		{
 			name: "with all windows",
@@ -508,7 +508,7 @@ func TestRateLimit(t *testing.T) {
 				SevenDay:   &types.RateLimitWindow{UsedPercentage: 50},
 				SpendLimit: &types.RateLimitWindow{UsedPercentage: 75},
 			}},
-			want: testCfg.Segments.RateLimit.Icon + " 5h:10% 7d:50% $:75%",
+			want: IconRateLimit + " 5h:10% 7d:50% $:75%",
 		},
 	}
 	for _, tt := range tests {
@@ -533,7 +533,7 @@ func TestToken(t *testing.T) {
 					TotalOutputTokens: 1200,
 				},
 			},
-			want: testCfg.Segments.Token.IconIn + "15k " + testCfg.Segments.Token.IconOut + "1k",
+			want: IconTokenIn + "15k " + IconTokenOut + "1k",
 		},
 	}
 	for _, tt := range tests {
@@ -555,12 +555,12 @@ func TestCache(t *testing.T) {
 			data: types.Payload{
 				PromptCache: &types.PromptCacheInfo{Warm: true, HitRatio: new(0.91)},
 			},
-			want: testCfg.Segments.Cache.Icon + " warm 91%",
+			want: IconCache + " warm 91%",
 		},
 		{
 			name: "cold cache",
 			data: types.Payload{PromptCache: &types.PromptCacheInfo{Warm: false}},
-			want: testCfg.Segments.Cache.Icon + " cold",
+			want: IconCache + " cold",
 		},
 	}
 	for _, tt := range tests {
@@ -579,7 +579,7 @@ func TestExceeds(t *testing.T) {
 		{
 			name: "exceeds 200k",
 			data: types.Payload{Exceeds200k: true},
-			want: testCfg.Segments.Exceeds.Icon + " >200k",
+			want: IconExceeds + " >200k",
 		},
 		{name: "under 200k", data: types.Payload{}, want: ""},
 	}
@@ -594,7 +594,7 @@ func TestEdgeCases(t *testing.T) {
 	t.Run("model with empty display name and max mode", func(t *testing.T) {
 		assert.Equal(
 			t,
-			testCfg.Segments.Model.Icon+" unknown",
+			IconModel+" unknown",
 			model(testCfg, types.Payload{Model: types.ModelInfo{MaxMode: true}}),
 		)
 	})
@@ -603,14 +603,14 @@ func TestEdgeCases(t *testing.T) {
 		assert.Contains(
 			t,
 			cost(testCfg, types.Payload{Cost: types.CostInfo{TotalCostUSD: new(math.MaxFloat64)}}),
-			testCfg.Segments.Cost.Icon,
+			IconCost,
 		)
 	})
 
 	t.Run("vim with unknown mode uses normal icon", func(t *testing.T) {
 		assert.Equal(
 			t,
-			testCfg.Segments.Vim.IconNormal+" ",
+			IconVimNormal+" ",
 			vim(testCfg, types.Payload{Vim: types.VimInfo{Mode: "SOMETHING"}}),
 		)
 	})
