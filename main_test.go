@@ -52,6 +52,29 @@ func TestReadPayload(t *testing.T) {
 	assert.Equal(t, "INSERT", data.Vim.Mode)
 }
 
+func TestReadPayload_FaultTolerant(t *testing.T) {
+	oldStdin := os.Stdin
+	t.Cleanup(func() { os.Stdin = oldStdin })
+
+	r, w, err := os.Pipe()
+	require.NoError(t, err)
+	os.Stdin = r
+
+	input := `{"cwd":"/safe","autorun":true,"model":null,"workspace":"oops","cost":{"total_cost_usd":0.99},"vim":123}`
+	_, err = w.Write([]byte(input))
+	require.NoError(t, err)
+	require.NoError(t, w.Close())
+
+	data := readPayload()
+	assert.Equal(t, "/safe", data.Cwd)
+	assert.True(t, data.Autorun)
+	assert.Equal(t, "", data.Model.DisplayName)
+	assert.Equal(t, "", data.Workspace.CurrentDir)
+	require.NotNil(t, data.Cost.TotalCostUSD)
+	assert.Equal(t, 0.99, *data.Cost.TotalCostUSD)
+	assert.Equal(t, "", data.Vim.Mode)
+}
+
 func TestReadPayload_EmptyInput(t *testing.T) {
 	if os.Getenv("TEST_READ_PAYLOAD_EXIT") == "1" {
 		r, w, _ := os.Pipe()

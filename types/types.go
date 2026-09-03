@@ -1,5 +1,12 @@
-// Package types used in this project
+// Package types used in this porject
 package types
+
+import (
+	"encoding/json/v2"
+	"log/slog"
+	"reflect"
+	"strings"
+)
 
 type (
 	ModelInfo struct {
@@ -116,3 +123,59 @@ type (
 		PR             *PRInfo           `json:"pr,omitzero"`
 	}
 )
+
+func (p *Payload) UnmarshalJSON(data []byte) error {
+	var raw map[string]any
+	if err := json.Unmarshal(data, &raw); err != nil {
+		return err
+	}
+
+	pValue := reflect.ValueOf(p).Elem()
+	pType := pValue.Type()
+
+	for i := range pType.NumField() {
+		field := pType.Field(i)
+		tag := field.Tag.Get("json")
+		if tag == "" {
+			continue
+		}
+		key, _, _ := strings.Cut(tag, ",")
+
+		rawValue, ok := raw[key]
+		if !ok {
+			continue
+		}
+
+		b, err := json.Marshal(rawValue)
+		if err != nil {
+			slog.Warn(
+				"unmarshal payload: failed to marshal",
+				slog.String("key", key),
+				slog.Any("error", err),
+			)
+			continue
+		}
+
+		fieldValue := pValue.Field(i)
+		if fieldValue.Kind() == reflect.Pointer {
+			fieldValue.Set(reflect.New(fieldValue.Type().Elem()))
+			if err := json.Unmarshal(b, fieldValue.Interface()); err != nil {
+				slog.Warn(
+					"unmarshal payload: failed to unmarshal",
+					slog.String("key", key),
+					slog.Any("error", err),
+				)
+			}
+		} else {
+			if err := json.Unmarshal(b, fieldValue.Addr().Interface()); err != nil {
+				slog.Warn(
+					"unmarshal payload: failed to unmarshal",
+					slog.String("key", key),
+					slog.Any("error", err),
+				)
+			}
+		}
+	}
+
+	return nil
+}
