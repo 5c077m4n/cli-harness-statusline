@@ -3,10 +3,16 @@ package types
 
 import (
 	"encoding/json/v2"
+	"errors"
+	"fmt"
+	"io"
 	"log/slog"
+	"os"
 	"reflect"
 	"strings"
 )
+
+var ErrSTDINRead = errors.New("STDIN read failed")
 
 type (
 	ModelInfo struct {
@@ -178,4 +184,18 @@ func (p *Payload) UnmarshalJSON(data []byte) error {
 	}
 
 	return nil
+}
+
+func NewPayLoad() (*Payload, error) {
+	input, err := io.ReadAll(os.Stdin)
+	if err != nil {
+		return nil, errors.Join(ErrSTDINRead, err)
+	}
+
+	var data Payload
+	if err := json.Unmarshal(input, &data); err != nil {
+		return nil, errors.Join(fmt.Errorf("JSON unmarshal failed for '%s'", input), err)
+	}
+
+	return &data, nil
 }

@@ -65,7 +65,7 @@ func gitInfo(directory string) (string, bool) {
 	return match[1], dirty
 }
 
-func model(cfg *config.Config, data types.Payload) string {
+func model(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Model.Disable {
 		return ""
 	}
@@ -79,7 +79,7 @@ func model(cfg *config.Config, data types.Payload) string {
 	return colorBlue.Add(color.Bold).Sprintf("%s %s", IconModel, name)
 }
 
-func folder(cfg *config.Config, data types.Payload) string {
+func folder(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Folder.Disable {
 		return ""
 	}
@@ -99,7 +99,7 @@ func folder(cfg *config.Config, data types.Payload) string {
 	return colorDim.Sprintf("%s %s", IconFolder, folder)
 }
 
-func git(cfg *config.Config, data types.Payload) string {
+func git(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Git.Disable {
 		return ""
 	}
@@ -124,7 +124,7 @@ func git(cfg *config.Config, data types.Payload) string {
 	return segment
 }
 
-func worktree(cfg *config.Config, data types.Payload) string {
+func worktree(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Worktree.Disable {
 		return ""
 	}
@@ -134,7 +134,7 @@ func worktree(cfg *config.Config, data types.Payload) string {
 	return colorDim.Sprintf("%s %s", IconWorktree, data.Worktree.Name)
 }
 
-func context(cfg *config.Config, data types.Payload) string {
+func context(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Context.Disable {
 		return ""
 	}
@@ -153,7 +153,7 @@ func context(cfg *config.Config, data types.Payload) string {
 	return selectedColor.Sprintf("%s [%s] %.0f%%", IconContext, bar, percent)
 }
 
-func cost(cfg *config.Config, data types.Payload) string {
+func cost(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Cost.Disable {
 		return ""
 	}
@@ -181,7 +181,7 @@ func cost(cfg *config.Config, data types.Payload) string {
 	return segment
 }
 
-func vim(cfg *config.Config, data types.Payload) string {
+func vim(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Vim.Disable {
 		return ""
 	}
@@ -197,7 +197,7 @@ func vim(cfg *config.Config, data types.Payload) string {
 	return colorDim.Sprintf("%s ", icon)
 }
 
-func autorun(cfg *config.Config, data types.Payload) string {
+func autorun(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Autorun.Disable {
 		return ""
 	}
@@ -207,7 +207,7 @@ func autorun(cfg *config.Config, data types.Payload) string {
 	return colorYellow.Sprintf("%s auto", IconAutorun)
 }
 
-func max(cfg *config.Config, data types.Payload) string {
+func max(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Max.Disable {
 		return ""
 	}
@@ -217,7 +217,7 @@ func max(cfg *config.Config, data types.Payload) string {
 	return colorYellow.Sprintf("%s max", IconMax)
 }
 
-func fastMode(cfg *config.Config, data types.Payload) string {
+func fastMode(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.FastMode.Disable {
 		return ""
 	}
@@ -227,7 +227,7 @@ func fastMode(cfg *config.Config, data types.Payload) string {
 	return colorCyan.Sprintf("%s fast", IconFastMode)
 }
 
-func effort(cfg *config.Config, data types.Payload) string {
+func effort(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Effort.Disable {
 		return ""
 	}
@@ -237,7 +237,7 @@ func effort(cfg *config.Config, data types.Payload) string {
 	return colorDim.Sprintf("%s %s", IconEffort, data.Effort.Level)
 }
 
-func thinking(cfg *config.Config, data types.Payload) string {
+func thinking(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Thinking.Disable {
 		return ""
 	}
@@ -247,7 +247,7 @@ func thinking(cfg *config.Config, data types.Payload) string {
 	return colorDim.Sprintf("%s think", IconThinking)
 }
 
-func session(cfg *config.Config, data types.Payload) string {
+func session(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Session.Disable {
 		return ""
 	}
@@ -261,7 +261,7 @@ func session(cfg *config.Config, data types.Payload) string {
 	return colorDim.Sprintf("%s %s", IconSession, name)
 }
 
-func pr(cfg *config.Config, data types.Payload) string {
+func pr(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.PR.Disable {
 		return ""
 	}
@@ -287,7 +287,7 @@ func pr(cfg *config.Config, data types.Payload) string {
 	return colorMagenta.Sprintf("%s %s", IconPR, label)
 }
 
-func agent(cfg *config.Config, data types.Payload) string {
+func agent(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Agent.Disable {
 		return ""
 	}
@@ -297,7 +297,7 @@ func agent(cfg *config.Config, data types.Payload) string {
 	return colorDim.Sprintf("%s %s", IconAgent, data.Agent.Name)
 }
 
-func rateLimit(cfg *config.Config, data types.Payload) string {
+func rateLimit(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.RateLimit.Disable {
 		return ""
 	}
@@ -320,7 +320,7 @@ func rateLimit(cfg *config.Config, data types.Payload) string {
 	return colorDim.Sprintf("%s %s", IconRateLimit, strings.Join(parts, " "))
 }
 
-func token(cfg *config.Config, data types.Payload) string {
+func token(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Token.Disable {
 		return ""
 	}
@@ -332,7 +332,7 @@ func token(cfg *config.Config, data types.Payload) string {
 	return colorDim.Sprintf("%s%dk %s%dk", IconTokenIn, in/1000, IconTokenOut, out/1000)
 }
 
-func cache(cfg *config.Config, data types.Payload) string {
+func cache(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Cache.Disable {
 		return ""
 	}
@@ -352,7 +352,7 @@ func cache(cfg *config.Config, data types.Payload) string {
 	return colorDim.Sprintf("%s %s", IconCache, label)
 }
 
-func exceeds(cfg *config.Config, data types.Payload) string {
+func exceeds(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Exceeds.Disable {
 		return ""
 	}
@@ -362,8 +362,8 @@ func exceeds(cfg *config.Config, data types.Payload) string {
 	return colorYellow.Sprintf("%s >200k", IconExceeds)
 }
 
-func Render(cfg *config.Config, data types.Payload) string {
-	segmentFuncs := [...]func(*config.Config, types.Payload) string{
+func Render(cfg *config.Config, data *types.Payload) string {
+	segmentFuncs := [...]func(*config.Config, *types.Payload) string{
 		model,
 		folder,
 		git,

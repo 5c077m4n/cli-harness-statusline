@@ -3,10 +3,10 @@ package main
 import (
 	"bytes"
 	"os"
-	"os/exec"
 	"testing"
 
 	"github.com/5c077m4n/cli-harness-statusline/segments"
+	"github.com/5c077m4n/cli-harness-statusline/types"
 	"github.com/fatih/color"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -25,7 +25,9 @@ func TestReadPayload(t *testing.T) {
 	require.NoError(t, err)
 	require.NoError(t, w.Close())
 
-	data := readPayload()
+	data, err := types.NewPayLoad()
+	require.NoError(t, err)
+
 	assert.Equal(t, "/test", data.Cwd)
 	assert.True(t, data.Autorun)
 	assert.Equal(t, "gpt-4o", data.Model.DisplayName)
@@ -52,7 +54,9 @@ func TestReadPayload_FaultTolerant(t *testing.T) {
 	require.NoError(t, err)
 	require.NoError(t, w.Close())
 
-	data := readPayload()
+	data, err := types.NewPayLoad()
+	require.NoError(t, err)
+
 	assert.Equal(t, "/safe", data.Cwd)
 	assert.True(t, data.Autorun)
 	assert.Equal(t, "", data.Model.DisplayName)
@@ -63,20 +67,18 @@ func TestReadPayload_FaultTolerant(t *testing.T) {
 }
 
 func TestReadPayload_EmptyInput(t *testing.T) {
-	if os.Getenv("TEST_READ_PAYLOAD_EXIT") == "1" {
-		r, w, _ := os.Pipe()
-		os.Stdin = r
-		_ = w.Close()
-		readPayload()
-		return
-	}
-	cmd := exec.Command(os.Args[0], "-test.run=TestReadPayload_EmptyInput")
-	cmd.Env = append(os.Environ(), "TEST_READ_PAYLOAD_EXIT=1")
-	err := cmd.Run()
-	if e, ok := err.(*exec.ExitError); ok && !e.Success() {
-		return
-	}
-	t.Fatal("expected readPayload() to os.Exit(1) on empty input")
+	oldStdin := os.Stdin
+	t.Cleanup(func() { os.Stdin = oldStdin })
+
+	r, w, err := os.Pipe()
+	require.NoError(t, err)
+	os.Stdin = r
+	require.NoError(t, w.Close())
+
+	payload, err := types.NewPayLoad()
+	assert.Nil(t, payload)
+	assert.ErrorContains(t, err, "JSON unmarshal failed for")
+	assert.ErrorContains(t, err, "unexpected EOF")
 }
 
 func TestMainFullPayload(t *testing.T) {

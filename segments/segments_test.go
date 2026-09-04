@@ -41,7 +41,7 @@ func TestModel(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, model(testCfg, tt.data))
+			assert.Equal(t, tt.want, model(testCfg, &tt.data))
 		})
 	}
 }
@@ -80,7 +80,7 @@ func TestFolder(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, folder(testCfg, tt.data))
+			assert.Equal(t, tt.want, folder(testCfg, &tt.data))
 		})
 	}
 }
@@ -100,7 +100,7 @@ func TestWorktree(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, worktree(testCfg, tt.data))
+			assert.Equal(t, tt.want, worktree(testCfg, &tt.data))
 		})
 	}
 }
@@ -144,7 +144,7 @@ func TestContext(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, context(testCfg, tt.data))
+			assert.Equal(t, tt.want, context(testCfg, &tt.data))
 		})
 	}
 }
@@ -169,7 +169,7 @@ func TestCost(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, cost(testCfg, tt.data))
+			assert.Equal(t, tt.want, cost(testCfg, &tt.data))
 		})
 	}
 }
@@ -194,7 +194,7 @@ func TestVim(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, vim(testCfg, tt.data))
+			assert.Equal(t, tt.want, vim(testCfg, &tt.data))
 		})
 	}
 }
@@ -214,7 +214,7 @@ func TestAutorun(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, autorun(testCfg, tt.data))
+			assert.Equal(t, tt.want, autorun(testCfg, &tt.data))
 		})
 	}
 }
@@ -234,14 +234,14 @@ func TestMax(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, max(testCfg, tt.data))
+			assert.Equal(t, tt.want, max(testCfg, &tt.data))
 		})
 	}
 }
 
 func TestGitNotAGitRepo(t *testing.T) {
 	data := types.Payload{Cwd: t.TempDir(), Workspace: types.WorkspaceInfo{CurrentDir: t.TempDir()}}
-	assert.Empty(t, git(testCfg, data))
+	assert.Empty(t, git(testCfg, &data))
 }
 
 func TestGitInfoNotAGitRepo(t *testing.T) {
@@ -288,7 +288,7 @@ func TestContextColorThresholds(t *testing.T) {
 			data := types.Payload{
 				ContextWindow: types.ContextWindowInfo{UsedPercentage: new(tt.percent)},
 			}
-			assert.Contains(t, context(testCfg, data), tt.want)
+			assert.Contains(t, context(testCfg, &data), tt.want)
 		})
 	}
 }
@@ -312,7 +312,7 @@ func TestContextBarFilling(t *testing.T) {
 			data := types.Payload{
 				ContextWindow: types.ContextWindowInfo{UsedPercentage: new(tt.percent)},
 			}
-			got := context(testCfg, data)
+			got := context(testCfg, &data)
 			expectedBar := strings.Repeat(
 				IconBarFilled,
 				tt.filled,
@@ -326,11 +326,11 @@ func TestContextBarFilling(t *testing.T) {
 }
 
 func TestWorktreeEmpty(t *testing.T) {
-	assert.Empty(t, worktree(testCfg, types.Payload{Worktree: types.WorktreeInfo{Name: ""}}))
+	assert.Empty(t, worktree(testCfg, &types.Payload{Worktree: types.WorktreeInfo{Name: ""}}))
 }
 
 func TestFolderCurrentDirPriority(t *testing.T) {
-	data := types.Payload{
+	data := &types.Payload{
 		Cwd:       "/fallback",
 		Workspace: types.WorkspaceInfo{CurrentDir: "/preferred"},
 	}
@@ -352,7 +352,7 @@ func TestFastMode(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, fastMode(testCfg, tt.data))
+			assert.Equal(t, tt.want, fastMode(testCfg, &tt.data))
 		})
 	}
 }
@@ -373,7 +373,7 @@ func TestEffort(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, effort(testCfg, tt.data))
+			assert.Equal(t, tt.want, effort(testCfg, &tt.data))
 		})
 	}
 }
@@ -398,7 +398,7 @@ func TestThinking(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, thinking(testCfg, tt.data))
+			assert.Equal(t, tt.want, thinking(testCfg, &tt.data))
 		})
 	}
 }
@@ -423,7 +423,7 @@ func TestSession(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, session(testCfg, tt.data))
+			assert.Equal(t, tt.want, session(testCfg, &tt.data))
 		})
 	}
 }
@@ -444,7 +444,7 @@ func TestAgent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, agent(testCfg, tt.data))
+			assert.Equal(t, tt.want, agent(testCfg, &tt.data))
 		})
 	}
 }
@@ -486,7 +486,7 @@ func TestPR(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, pr(testCfg, tt.data))
+			assert.Equal(t, tt.want, pr(testCfg, &tt.data))
 		})
 	}
 }
@@ -519,7 +519,7 @@ func TestRateLimit(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, rateLimit(testCfg, tt.data))
+			assert.Equal(t, tt.want, rateLimit(testCfg, &tt.data))
 		})
 	}
 }
@@ -544,7 +544,7 @@ func TestToken(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, token(testCfg, tt.data))
+			assert.Equal(t, tt.want, token(testCfg, &tt.data))
 		})
 	}
 }
@@ -571,7 +571,7 @@ func TestCache(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, cache(testCfg, tt.data))
+			assert.Equal(t, tt.want, cache(testCfg, &tt.data))
 		})
 	}
 }
@@ -591,7 +591,7 @@ func TestExceeds(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, exceeds(testCfg, tt.data))
+			assert.Equal(t, tt.want, exceeds(testCfg, &tt.data))
 		})
 	}
 }
@@ -601,14 +601,14 @@ func TestEdgeCases(t *testing.T) {
 		assert.Equal(
 			t,
 			IconModel+" unknown",
-			model(testCfg, types.Payload{Model: types.ModelInfo{MaxMode: true}}),
+			model(testCfg, &types.Payload{Model: types.ModelInfo{MaxMode: true}}),
 		)
 	})
 
 	t.Run("cost with very large value", func(t *testing.T) {
 		assert.Contains(
 			t,
-			cost(testCfg, types.Payload{Cost: types.CostInfo{TotalCostUSD: new(math.MaxFloat64)}}),
+			cost(testCfg, &types.Payload{Cost: types.CostInfo{TotalCostUSD: new(math.MaxFloat64)}}),
 			IconCost,
 		)
 	})
@@ -617,7 +617,7 @@ func TestEdgeCases(t *testing.T) {
 		assert.Equal(
 			t,
 			IconVimNormal+" ",
-			vim(testCfg, types.Payload{Vim: types.VimInfo{Mode: "SOMETHING"}}),
+			vim(testCfg, &types.Payload{Vim: types.VimInfo{Mode: "SOMETHING"}}),
 		)
 	})
 }
