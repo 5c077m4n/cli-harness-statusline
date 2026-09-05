@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log/slog"
+	"os"
 
 	"github.com/5c077m4n/cli-harness-statusline/config"
 	"github.com/5c077m4n/cli-harness-statusline/logs"
@@ -11,17 +12,18 @@ import (
 	"github.com/fatih/color"
 )
 
-func init() {
-	logs.Init()
-	color.NoColor = false
-}
-
 func main() {
+	if logFile, err := logs.Init(); logFile != nil && err == nil {
+		defer func() { _ = logFile.Close() }()
+	}
+	color.NoColor = false
+
 	cfg := config.Load()
 
 	data, err := types.NewPayLoad()
 	if err != nil {
-		panic(err)
+		slog.Error("could not parse payload", slog.Any("error", err))
+		os.Exit(1)
 	}
 	line := segments.Render(cfg, data)
 
