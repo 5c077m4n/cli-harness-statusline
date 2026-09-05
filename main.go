@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/5c077m4n/cli-harness-statusline/config"
+	"github.com/5c077m4n/cli-harness-statusline/host"
 	"github.com/5c077m4n/cli-harness-statusline/logs"
 	"github.com/5c077m4n/cli-harness-statusline/segments"
 	"github.com/5c077m4n/cli-harness-statusline/types"
@@ -29,6 +30,7 @@ func main() {
 
 	slog.Info(
 		"statusline",
+		slog.String("cli", host.Name()),
 		slog.String("model", data.Model.DisplayName),
 		slog.String("session", data.SessionName),
 		slog.String("output", line),
