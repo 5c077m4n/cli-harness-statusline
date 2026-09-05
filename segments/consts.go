@@ -33,7 +33,7 @@ const (
 	IconGitBranch = "󰊢"
 	IconWorktree  = "󰙅"
 	IconContext   = "󰧑"
-	IconCost      = "$"
+	IconCost      = "󰥏"
 	IconDuration  = "󱎫"
 	IconLines     = "󰆓"
 	IconVimNormal = "󰌌"
