@@ -44,13 +44,13 @@ type Config struct {
 	Padding  Padding        `json:"padding"`
 }
 
-func configDir() string {
+func getConfigDir() string {
 	if dir := os.Getenv("XDG_CONFIG_HOME"); dir != "" {
 		return filepath.Join(dir, "cli-harness-statusline")
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
-		slog.Error("configDir: UserHomeDir", slog.Any("error", err))
+		slog.Error("could not get home dir", slog.Any("error", err))
 		return ""
 	}
 	return filepath.Join(home, ".config", "cli-harness-statusline")
@@ -59,7 +59,7 @@ func configDir() string {
 func Load() *Config {
 	cfg := &Config{}
 
-	dir := configDir()
+	dir := getConfigDir()
 	if dir == "" {
 		return cfg
 	}
