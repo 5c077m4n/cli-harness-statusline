@@ -339,17 +339,21 @@ func cache(cfg *config.Config, data *types.Payload) string {
 	if data.PromptCache == nil {
 		return ""
 	}
-	label := ""
+
+	var format *color.Color
+	base := ""
 	if data.PromptCache.Warm {
-		label = colorGreen.Sprint("warm")
+		format = colorOrange
+		base = fmt.Sprintf("%s warm", IconCache)
 	} else {
-		label = colorDim.Sprint("cold")
+		format = colorLightBlue
+		base = fmt.Sprintf("%s cold", IconCache)
 	}
 	if data.PromptCache.HitRatio != nil {
 		hit := math.Floor(*data.PromptCache.HitRatio * 100)
-		label += fmt.Sprintf(" %.0f%%", hit)
+		base += fmt.Sprintf(" %.0f%%", hit)
 	}
-	return colorDim.Sprintf("%s %s", IconCache, label)
+	return format.Sprint(base)
 }
 
 func exceeds(cfg *config.Config, data *types.Payload) string {
