@@ -363,7 +363,7 @@ func exceeds(cfg *config.Config, data *types.Payload) string {
 	if !data.Exceeds200k {
 		return ""
 	}
-	return colorYellow.Sprintf("%s >200k", IconExceeds)
+	return color.New(color.FgYellow, color.BgBlack).Sprintf("%s >200k", IconExceeds)
 }
 
 func Render(cfg *config.Config, data *types.Payload) string {
