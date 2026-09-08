@@ -157,6 +157,7 @@ func (p *Payload) UnmarshalJSON(data []byte) error {
 			slog.Warn(
 				"unmarshal payload: failed to marshal",
 				slog.String("key", key),
+				slog.Any("raw_value", rawValue),
 				slog.Any("error", err),
 			)
 			continue
@@ -169,6 +170,7 @@ func (p *Payload) UnmarshalJSON(data []byte) error {
 				slog.Warn(
 					"unmarshal payload: failed to unmarshal",
 					slog.String("key", key),
+					slog.String("value", string(b)),
 					slog.Any("error", err),
 				)
 			}
@@ -177,6 +179,7 @@ func (p *Payload) UnmarshalJSON(data []byte) error {
 				slog.Warn(
 					"unmarshal payload: failed to unmarshal",
 					slog.String("key", key),
+					slog.String("value", string(b)),
 					slog.Any("error", err),
 				)
 			}
