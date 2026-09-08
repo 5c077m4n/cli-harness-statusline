@@ -164,9 +164,7 @@ func cost(cfg *config.Config, data *types.Payload) string {
 
 	if data.Cost.TotalDurationMs > 0 {
 		totalSecs := int64(data.Cost.TotalDurationMs / 1000)
-		mins := totalSecs / 60
-		secs := totalSecs % 60
-		segment += colorDim.Sprintf(" %s%dm%ds", IconDuration, mins, secs)
+		segment += colorDim.Sprintf(" %s%s", IconDuration, formatDuration(totalSecs))
 	}
 
 	if data.Cost.TotalLinesAdded > 0 || data.Cost.TotalLinesRemoved > 0 {
@@ -179,6 +177,26 @@ func cost(cfg *config.Config, data *types.Payload) string {
 	}
 
 	return segment
+}
+
+func formatDuration(totalSecs int64) string {
+	if totalSecs >= secondsPerDay {
+		days := totalSecs / secondsPerDay
+		totalSecs %= secondsPerDay
+		hours := totalSecs / secondsPerHour
+		totalSecs %= secondsPerHour
+		mins := totalSecs / secondsPerMinute
+		secs := totalSecs % secondsPerMinute
+		return fmt.Sprintf("%02dd%02dh%02dm%02ds", days, hours, mins, secs)
+	}
+	hours := totalSecs / secondsPerHour
+	totalSecs %= secondsPerHour
+	mins := totalSecs / secondsPerMinute
+	secs := totalSecs % secondsPerMinute
+	if hours > 0 {
+		return fmt.Sprintf("%02dh%02dm%02ds", hours, mins, secs)
+	}
+	return fmt.Sprintf("%dm%ds", mins, secs)
 }
 
 func vim(cfg *config.Config, data *types.Payload) string {

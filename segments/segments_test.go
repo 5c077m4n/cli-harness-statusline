@@ -166,6 +166,30 @@ func TestCost(t *testing.T) {
 			want: IconCost + " $0.00",
 		},
 		{name: "nil cost", data: types.Payload{}, want: ""},
+		{
+			name: "duration under a minute",
+			data: types.Payload{Cost: types.CostInfo{
+				TotalCostUSD:    new(1.0),
+				TotalDurationMs: 61000,
+			}},
+			want: IconCost + " $1.00 " + IconDuration + "1m1s",
+		},
+		{
+			name: "duration over an hour",
+			data: types.Payload{Cost: types.CostInfo{
+				TotalCostUSD:    new(1.0),
+				TotalDurationMs: 3661000,
+			}},
+			want: IconCost + " $1.00 " + IconDuration + "01h01m01s",
+		},
+		{
+			name: "duration over a day",
+			data: types.Payload{Cost: types.CostInfo{
+				TotalCostUSD:    new(1.0),
+				TotalDurationMs: 90061000,
+			}},
+			want: IconCost + " $1.00 " + IconDuration + "01d01h01m01s",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
