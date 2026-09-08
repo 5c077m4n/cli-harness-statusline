@@ -183,12 +183,12 @@ func TestVim(t *testing.T) {
 		{
 			name: "insert mode",
 			data: types.Payload{Vim: types.VimInfo{Mode: "INSERT"}},
-			want: IconVimInsert + " ",
+			want: IconVimInsert,
 		},
 		{
 			name: "normal mode",
 			data: types.Payload{Vim: types.VimInfo{Mode: "NORMAL"}},
-			want: IconVimNormal + " ",
+			want: IconVimNormal,
 		},
 		{name: "empty mode", data: types.Payload{}, want: ""},
 	}
@@ -616,7 +616,7 @@ func TestEdgeCases(t *testing.T) {
 	t.Run("vim with unknown mode uses normal icon", func(t *testing.T) {
 		assert.Equal(
 			t,
-			IconVimNormal+" ",
+			IconVimNormal,
 			vim(testCfg, &types.Payload{Vim: types.VimInfo{Mode: "SOMETHING"}}),
 		)
 	})

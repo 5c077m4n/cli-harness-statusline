@@ -194,7 +194,7 @@ func vim(cfg *config.Config, data *types.Payload) string {
 		icon = IconVimInsert
 	}
 
-	return colorDim.Sprintf("%s ", icon)
+	return colorDim.Sprintf("%s", icon)
 }
 
 func autorun(cfg *config.Config, data *types.Payload) string {
