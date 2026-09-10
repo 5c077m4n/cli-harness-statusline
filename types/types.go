@@ -82,14 +82,14 @@ type (
 		Warm                bool     `json:"warm"`
 		CachingObserved     bool     `json:"caching_observed"`
 		TTL                 string   `json:"ttl"`
-		ExpiresAt           string   `json:"expires_at"`
+		ExpiresAt           *float64 `json:"expires_at"`
 		Requests            int      `json:"requests"`
 		Misses              int      `json:"misses"`
 		ExpectedRebuilds    int      `json:"expected_rebuilds"`
 		HitRatio            *float64 `json:"hit_ratio"`
 		CacheWriteTokens    int64    `json:"cache_write_tokens"`
 		MissRecacheTokens   int64    `json:"miss_recache_tokens"`
-		LastMissAt          string   `json:"last_miss_at"`
+		LastMissAt          *float64 `json:"last_miss_at"`
 		RecacheTokensIfCold *float64 `json:"recache_tokens_if_cold"`
 	}
 	OutputStyleInfo struct {
