@@ -150,7 +150,12 @@ func context(cfg *config.Config, data *types.Payload) string {
 	}
 
 	bar := strings.Repeat(IconBarFilled, filled) + strings.Repeat(IconBarEmpty, 10-filled)
-	return selectedColor.Sprintf("%s [%s] %.0f%%", IconContext, bar, percent)
+	exceedMark := ""
+	if !cfg.Segments.Exceeds.Disable && data.Exceeds200k {
+		exceedMark = "(!)"
+	}
+
+	return selectedColor.Sprintf("%s [%s] %.0f%%%s", IconContext, bar, percent, exceedMark)
 }
 
 func cost(cfg *config.Config, data *types.Payload) string {
@@ -374,16 +379,6 @@ func cache(cfg *config.Config, data *types.Payload) string {
 	return format.Sprint(base)
 }
 
-func exceeds(cfg *config.Config, data *types.Payload) string {
-	if cfg.Segments.Exceeds.Disable {
-		return ""
-	}
-	if !data.Exceeds200k {
-		return ""
-	}
-	return color.New(color.FgYellow, color.BgBlack).Sprintf("%s >200k", IconExceeds)
-}
-
 func Render(cfg *config.Config, data *types.Payload) string {
 	segmentFuncs := [...]func(*config.Config, *types.Payload) string{
 		model,
@@ -404,7 +399,6 @@ func Render(cfg *config.Config, data *types.Payload) string {
 		effort,
 		thinking,
 		rateLimit,
-		exceeds,
 	}
 
 	nonEmpty := make([]string, 0, len(segmentFuncs))

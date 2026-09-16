@@ -141,6 +141,14 @@ func TestContext(t *testing.T) {
 			data: types.Payload{ContextWindow: types.ContextWindowInfo{UsedPercentage: new(59.9)}},
 			want: IconContext + " [#####-----] 59%",
 		},
+		{
+			name: "exceeding percent",
+			data: types.Payload{
+				ContextWindow: types.ContextWindowInfo{UsedPercentage: new(59.9)},
+				Exceeds200k:   true,
+			},
+			want: IconContext + " [#####-----] 59%(!)",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -596,26 +604,6 @@ func TestCache(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equal(t, tt.want, cache(testCfg, &tt.data))
-		})
-	}
-}
-
-func TestExceeds(t *testing.T) {
-	tests := []struct {
-		name string
-		data types.Payload
-		want string
-	}{
-		{
-			name: "exceeds 200k",
-			data: types.Payload{Exceeds200k: true},
-			want: IconExceeds + " >200k",
-		},
-		{name: "under 200k", data: types.Payload{}, want: ""},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, exceeds(testCfg, &tt.data))
 		})
 	}
 }
