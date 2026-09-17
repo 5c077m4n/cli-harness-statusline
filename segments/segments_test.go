@@ -147,7 +147,7 @@ func TestContext(t *testing.T) {
 				ContextWindow: types.ContextWindowInfo{UsedPercentage: new(59.9)},
 				Exceeds200k:   true,
 			},
-			want: IconContext + " [#####-----] 59%(!)",
+			want: IconContext + " [#####-----] 59% (!)",
 		},
 	}
 	for _, tt := range tests {
