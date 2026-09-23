@@ -10,3 +10,12 @@ tasks:
     cmds:
       - mkdir -p bin
       - go build -o bin/statusline .
+
+  bump-tag:patch:
+    desc: Bump the git tag by a patch version
+    cmd: |
+      latest=$(git describe --tags --abbrev=0) || exit 1
+      new=$(echo "$latest" | awk -F. '{print $1"."$2"."$3+1}')
+      git tag "$new"
+      git push origin "$new"
+      echo "Created and pushed tag $new"
