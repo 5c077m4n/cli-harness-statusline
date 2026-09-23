@@ -378,7 +378,8 @@ func TestTruncate(t *testing.T) {
 	}{
 		{"abc", "abc", 5},
 		{"abc", "abc", 3},
-		{"ab…", "abcd", 2},
+		{"a…d", "abcd", 2},
+		{"a…ef", "abcdef", 3},
 		{"abcd", "abcd", 0},
 		{"abcd", "abcd", -1},
 	}
@@ -402,7 +403,7 @@ func TestFolderTruncation(t *testing.T) {
 	data := &types.Payload{
 		Workspace: types.WorkspaceInfo{CurrentDir: "/home/user/a-very-long-project-folder-name"},
 	}
-	assert.Equal(t, IconFolder+" a-very-long-project-fold…", folder(cfg, data))
+	assert.Equal(t, IconFolder+" a-very-long-…-folder-name", folder(cfg, data))
 }
 
 func TestFolderTruncationDisabled(t *testing.T) {
@@ -496,7 +497,7 @@ func TestSession(t *testing.T) {
 		{
 			name: "truncates long name",
 			data: types.Payload{SessionName: "abcdefghijklmnopqrstuvwxyz123456"},
-			want: IconSession + " abcdefghijklmnopqrstuvwx…",
+			want: IconSession + " abcdefghijkl…uvwxyz123456",
 		},
 	}
 	for _, tt := range tests {

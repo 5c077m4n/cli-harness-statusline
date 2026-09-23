@@ -24,7 +24,9 @@ func truncate(s string, maxLen int) string {
 	if maxLen <= 0 || len(s) <= maxLen {
 		return s
 	}
-	return s[:maxLen] + "…"
+	prefix := maxLen / 2
+	suffix := maxLen - prefix
+	return s[:prefix] + "…" + s[len(s)-suffix:]
 }
 
 func TermSep() string {
