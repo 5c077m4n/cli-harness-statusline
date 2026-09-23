@@ -14,10 +14,14 @@ import (
 type SegmentConfig struct {
 	Disable bool `json:"disable"`
 }
+type TruncateConfig struct {
+	Disable         bool `json:"disable"`
+	DisableTruncate bool `json:"disableTruncate"`
+}
 type SegmentsConfig struct {
-	Model     SegmentConfig `json:"model"`
-	Folder    SegmentConfig `json:"folder"`
-	Git       SegmentConfig `json:"git"`
+	Model     SegmentConfig   `json:"model"`
+	Folder    TruncateConfig  `json:"folder"`
+	Git       TruncateConfig  `json:"git"`
 	Worktree  SegmentConfig `json:"worktree"`
 	PR        SegmentConfig `json:"pr"`
 	Agent     SegmentConfig `json:"agent"`

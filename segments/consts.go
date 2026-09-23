@@ -61,4 +61,6 @@ const (
 	secondsPerMinute int64 = 60
 	secondsPerHour         = 60 * secondsPerMinute
 	secondsPerDay          = 24 * secondsPerHour
+
+	defaultTruncateLength = 24
 )

@@ -20,6 +20,13 @@ func usedPct(pct *float64) float64 {
 	return *pct
 }
 
+func truncate(s string, maxLen int) string {
+	if maxLen <= 0 || len(s) <= maxLen {
+		return s
+	}
+	return s[:maxLen] + "…"
+}
+
 func TermSep() string {
 	return colorGray.Sprint(" | ")
 }
@@ -96,6 +103,10 @@ func folder(cfg *config.Config, data *types.Payload) string {
 		folder = "/"
 	}
 
+	if !cfg.Segments.Folder.DisableTruncate {
+		folder = truncate(folder, defaultTruncateLength)
+	}
+
 	return colorDim.Sprintf("%s %s", IconFolder, folder)
 }
 
@@ -114,6 +125,10 @@ func git(cfg *config.Config, data *types.Payload) string {
 	branch, dirty := gitInfo(directory)
 	if branch == "" {
 		return ""
+	}
+
+	if !cfg.Segments.Git.DisableTruncate {
+		branch = truncate(branch, defaultTruncateLength)
 	}
 
 	segment := colorMagenta.Sprintf("%s %s", IconGitBranch, branch)
@@ -279,12 +294,9 @@ func session(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Session.Disable {
 		return ""
 	}
-	name := data.SessionName
+	name := truncate(data.SessionName, 24)
 	if name == "" {
 		return ""
-	}
-	if len(name) > 24 {
-		name = name[:24] + "…"
 	}
 	return colorDim.Sprintf("%s %s", IconSession, name)
 }
