@@ -1,8 +1,6 @@
 package segments
 
 import (
-	"regexp"
-
 	"github.com/fatih/color"
 )
 
@@ -17,8 +15,6 @@ var (
 	colorCyan      = color.New(color.FgCyan)
 	colorLightBlue = color.New(color.FgHiBlue)
 	colorOrange    = color.RGB(255, 128, 0)
-
-	branchRegex = regexp.MustCompile(`^(?:No commits yet on )?([^\.\n]+)`)
 )
 
 // OSC8 codes

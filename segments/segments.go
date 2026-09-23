@@ -4,20 +4,21 @@ import (
 	"fmt"
 	"log/slog"
 	"math"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/5c077m4n/cli-harness-statusline/config"
 	"github.com/5c077m4n/cli-harness-statusline/types"
 	"github.com/fatih/color"
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 )
 
-func usedPct(pct *float64) float64 {
-	if pct == nil {
+func usedPct(percent *float64) float64 {
+	if percent == nil {
 		return 0
 	}
-	return *pct
+	return *percent
 }
 
 func truncate(s string, maxLen int) string {
@@ -39,64 +40,57 @@ type gitStatus struct {
 	dirty    bool
 }
 
-func gitShortSha(directory string) string {
-	cmd := exec.Command("git", "-C", directory, "rev-parse", "--short", "HEAD")
-	shaBytes, err := cmd.Output()
-	if err != nil {
-		slog.Warn(
-			"gitShortSha: git command failed",
-			slog.String("dir", directory),
-			slog.Any("error", err),
-		)
-		return ""
-	}
-	return strings.TrimSpace(string(shaBytes))
-}
-
 func gitInfo(directory string) gitStatus {
-	cmd := exec.Command("git", "-C", directory, "status", "--branch", "--porcelain")
-	outputBytes, err := cmd.Output()
+	repo, err := git.PlainOpen(directory)
 	if err != nil {
 		slog.Warn(
-			"gitInfo: git command failed",
+			"gitInfo: failed to open git repository",
 			slog.String("dir", directory),
 			slog.Any("error", err),
 		)
 		return gitStatus{}
 	}
 
-	output := strings.TrimSpace(string(outputBytes))
-	if output == "" {
+	worktree, err := repo.Worktree()
+	if err != nil {
+		slog.Warn(
+			"gitInfo: failed to get worktree",
+			slog.String("dir", directory),
+			slog.Any("error", err),
+		)
 		return gitStatus{}
 	}
 
-	lines := strings.SplitN(output, "\n", 2)
-	header := lines[0]
-	if !strings.HasPrefix(header, "## ") {
+	status, err := worktree.Status()
+	if err != nil {
+		slog.Warn(
+			"gitInfo: failed to get status",
+			slog.String("dir", directory),
+			slog.Any("error", err),
+		)
+		return gitStatus{}
+	}
+	dirty := !status.IsClean()
+
+	head, err := repo.Head()
+	if err != nil {
+		slog.Warn(
+			"gitInfo: failed to resolve HEAD",
+			slog.String("dir", directory),
+			slog.Any("error", err),
+		)
 		return gitStatus{}
 	}
 
-	header = strings.TrimPrefix(header, "## ")
-	dirty := len(lines) > 1 && lines[1] != ""
-
-	if header == "HEAD (no branch)" {
-		sha := gitShortSha(directory)
-		if sha == "" {
-			return gitStatus{}
-		}
-		return gitStatus{branch: sha, detached: true, dirty: dirty}
+	if head.Name() != plumbing.HEAD {
+		return gitStatus{branch: head.Name().Short(), dirty: dirty}
 	}
 
-	if idx := strings.Index(header, "..."); idx != -1 {
-		header = header[:idx]
-	}
-
-	match := branchRegex.FindStringSubmatch(header)
-	if len(match) < 2 {
+	sha := head.Hash().String()[:7]
+	if sha == "" {
 		return gitStatus{}
 	}
-
-	return gitStatus{branch: match[1], dirty: dirty}
+	return gitStatus{branch: sha, detached: true, dirty: dirty}
 }
 
 func model(cfg *config.Config, data *types.Payload) string {
@@ -137,7 +131,7 @@ func folder(cfg *config.Config, data *types.Payload) string {
 	return colorDim.Sprintf("%s %s", IconFolder, folder)
 }
 
-func git(cfg *config.Config, data *types.Payload) string {
+func gitBase(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Git.Disable {
 		return ""
 	}
@@ -175,7 +169,7 @@ func git(cfg *config.Config, data *types.Payload) string {
 	return segment
 }
 
-func worktree(cfg *config.Config, data *types.Payload) string {
+func gitWorktree(cfg *config.Config, data *types.Payload) string {
 	if cfg.Segments.Worktree.Disable {
 		return ""
 	}
@@ -436,8 +430,8 @@ func Render(cfg *config.Config, data *types.Payload) string {
 	segmentFuncs := [...]func(*config.Config, *types.Payload) string{
 		model,
 		folder,
-		git,
-		worktree,
+		gitBase,
+		gitWorktree,
 		pr,
 		agent,
 		session,

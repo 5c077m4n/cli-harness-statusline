@@ -104,7 +104,7 @@ func TestWorktree(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			assert.Equal(t, tt.want, worktree(testCfg, &tt.data))
+			assert.Equal(t, tt.want, gitWorktree(testCfg, &tt.data))
 		})
 	}
 }
@@ -277,7 +277,7 @@ func TestMax(t *testing.T) {
 
 func TestGitNotAGitRepo(t *testing.T) {
 	data := types.Payload{Cwd: t.TempDir(), Workspace: types.WorkspaceInfo{CurrentDir: t.TempDir()}}
-	assert.Empty(t, git(testCfg, &data))
+	assert.Empty(t, gitBase(testCfg, &data))
 }
 
 func TestGitInfoNotAGitRepo(t *testing.T) {
@@ -366,7 +366,7 @@ func TestGitSegmentDetachedHead(t *testing.T) {
 	run("checkout", "-q", "--detach", "HEAD")
 
 	data := &types.Payload{Cwd: dir, Workspace: types.WorkspaceInfo{CurrentDir: dir}}
-	assert.Contains(t, git(testCfg, data), IconGitBranch+" @")
+	assert.Contains(t, gitBase(testCfg, data), IconGitBranch+" @")
 }
 
 func TestContextColorThresholds(t *testing.T) {
@@ -445,7 +445,7 @@ func TestContextBarFilling(t *testing.T) {
 }
 
 func TestWorktreeEmpty(t *testing.T) {
-	assert.Empty(t, worktree(testCfg, &types.Payload{Worktree: types.WorktreeInfo{Name: ""}}))
+	assert.Empty(t, gitWorktree(testCfg, &types.Payload{Worktree: types.WorktreeInfo{Name: ""}}))
 }
 
 func TestFolderCurrentDirPriority(t *testing.T) {
