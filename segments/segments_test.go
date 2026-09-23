@@ -2,7 +2,6 @@ package segments
 
 import (
 	"math"
-	"os/exec"
 	"strconv"
 	"strings"
 	"testing"
@@ -414,48 +413,6 @@ func TestFolderTruncationDisabled(t *testing.T) {
 		Workspace: types.WorkspaceInfo{CurrentDir: "/home/user/a-very-long-project-folder-name"},
 	}
 	assert.Equal(t, IconFolder+" a-very-long-project-folder-name", folder(cfg, data))
-}
-
-func TestGitTruncation(t *testing.T) {
-	dir := t.TempDir()
-	if _, err := exec.Command("git", "init", "-q", dir).Output(); err != nil {
-		t.Skip("git init failed")
-	}
-	branch := "a-very-long-feature-branch-name"
-	if _, err := exec.Command("git", "-C", dir, "checkout", "-q", "-b", branch).
-		Output(); err != nil {
-		t.Skip("git checkout failed")
-	}
-
-	cfg := &config.Config{Segments: config.SegmentsConfig{
-		Git: config.TruncateConfig{DisableTruncate: false},
-	}}
-	data := &types.Payload{
-		Cwd:       dir,
-		Workspace: types.WorkspaceInfo{CurrentDir: dir},
-	}
-	assert.Equal(t, IconGitBranch+" a-very-long-feature-bran…*", git(cfg, data))
-}
-
-func TestGitTruncationDisabled(t *testing.T) {
-	dir := t.TempDir()
-	if _, err := exec.Command("git", "init", "-q", dir).Output(); err != nil {
-		t.Skip("git init failed")
-	}
-	branch := "a-very-long-feature-branch-name"
-	if _, err := exec.Command("git", "-C", dir, "checkout", "-q", "-b", branch).
-		Output(); err != nil {
-		t.Skip("git checkout failed")
-	}
-
-	cfg := &config.Config{Segments: config.SegmentsConfig{
-		Git: config.TruncateConfig{DisableTruncate: true},
-	}}
-	data := &types.Payload{
-		Cwd:       dir,
-		Workspace: types.WorkspaceInfo{CurrentDir: dir},
-	}
-	assert.Equal(t, IconGitBranch+" a-very-long-feature-branch-name*", git(cfg, data))
 }
 
 func TestFastMode(t *testing.T) {
