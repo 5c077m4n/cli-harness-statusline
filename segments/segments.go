@@ -158,7 +158,7 @@ func context(cfg *config.Config, data *types.Payload) string {
 	)
 
 	if !cfg.Segments.Exceeds.Disable && data.Exceeds200k {
-		return contextSegment + colorRed.Sprintf(" (!)")
+		return contextSegment + colorRed.Sprintf(" > 200K(!)")
 	}
 	return contextSegment
 }
