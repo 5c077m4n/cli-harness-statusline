@@ -287,44 +287,37 @@ func TestGitInfoNotAGitRepo(t *testing.T) {
 	assert.False(t, status.dirty)
 }
 
+func runGit(t *testing.T, dir string, args ...string) string {
+	t.Helper()
+
+	cmd := exec.Command("git", append([]string{"-C", dir}, args...)...)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("git %v failed: %v: %s", args, err, string(out))
+	}
+	return string(out)
+}
+
 func setupGitRepo(t *testing.T) string {
 	t.Helper()
+
 	dir := t.TempDir()
-	run := func(args ...string) string {
-		cmd := exec.Command("git", append([]string{"-C", dir}, args...)...)
-		out, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("git %v failed: %v: %s", args, err, string(out))
-		}
-		return string(out)
-	}
-	run("init", "-q")
-	run("config", "user.email", "test@test.com")
-	run("config", "user.name", "test")
+	runGit(t, dir, "init", "-q")
+	runGit(t, dir, "config", "user.email", "test@test.com")
+	runGit(t, dir, "config", "user.name", "test")
 	if err := os.WriteFile(filepath.Join(dir, "a.txt"), []byte("hello"), 0o644); err != nil {
 		t.Fatal(err)
 	}
-	run("add", ".")
-	run("commit", "-qm", "init")
+	runGit(t, dir, "add", ".")
+	runGit(t, dir, "commit", "-qm", "init")
+
 	return dir
 }
 
 func TestGitInfoDetachedHead(t *testing.T) {
 	dir := setupGitRepo(t)
-	commitOut, err := exec.Command("git", "-C", dir, "rev-parse", "--short", "HEAD").Output()
-	if err != nil {
-		t.Fatal(err)
-	}
-	wantSha := strings.TrimSpace(string(commitOut))
-
-	run := func(args ...string) {
-		cmd := exec.Command("git", append([]string{"-C", dir}, args...)...)
-		out, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("git %v failed: %v: %s", args, err, string(out))
-		}
-	}
-	run("checkout", "-q", "--detach", "HEAD")
+	wantSha := strings.TrimSpace(runGit(t, dir, "rev-parse", "--short", "HEAD"))
+	runGit(t, dir, "checkout", "-q", "--detach", "HEAD")
 
 	status := gitInfo(dir)
 	assert.Equal(t, wantSha, status.branch)
@@ -335,14 +328,7 @@ func TestGitInfoDetachedHead(t *testing.T) {
 func TestGitInfoDetachedHeadDirty(t *testing.T) {
 	dir := setupGitRepo(t)
 
-	run := func(args ...string) {
-		cmd := exec.Command("git", append([]string{"-C", dir}, args...)...)
-		out, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("git %v failed: %v: %s", args, err, string(out))
-		}
-	}
-	run("checkout", "-q", "--detach", "HEAD")
+	runGit(t, dir, "checkout", "-q", "--detach", "HEAD")
 	if err := os.WriteFile(filepath.Join(dir, "b.txt"), []byte("world"), 0o644); err != nil {
 		t.Fatal(err)
 	}
@@ -356,14 +342,7 @@ func TestGitInfoDetachedHeadDirty(t *testing.T) {
 func TestGitSegmentDetachedHead(t *testing.T) {
 	dir := setupGitRepo(t)
 
-	run := func(args ...string) {
-		cmd := exec.Command("git", append([]string{"-C", dir}, args...)...)
-		out, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("git %v failed: %v: %s", args, err, string(out))
-		}
-	}
-	run("checkout", "-q", "--detach", "HEAD")
+	runGit(t, dir, "checkout", "-q", "--detach", "HEAD")
 
 	data := &types.Payload{Cwd: dir, Workspace: types.WorkspaceInfo{CurrentDir: dir}}
 	assert.Contains(t, gitBase(testCfg, data), IconGitBranch+" @")
