@@ -41,7 +41,10 @@ type gitStatus struct {
 }
 
 func gitInfo(directory string) gitStatus {
-	repo, err := git.PlainOpen(directory)
+	repo, err := git.PlainOpenWithOptions(directory, &git.PlainOpenOptions{
+		DetectDotGit:          true,
+		EnableDotGitCommonDir: true,
+	})
 	if err != nil {
 		slog.Warn(
 			"gitInfo: failed to open git repository",

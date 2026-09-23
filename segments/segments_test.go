@@ -348,6 +348,25 @@ func TestGitSegmentDetachedHead(t *testing.T) {
 	assert.Contains(t, gitBase(testCfg, data), IconGitBranch+" @")
 }
 
+func TestGitInfoLinkedWorktree(t *testing.T) {
+	dir := setupGitRepo(t)
+	runGit(t, dir, "commit", "-qm", "second", "--allow-empty")
+
+	worktreeDir := filepath.Join(t.TempDir(), "wt")
+	runGit(t, dir, "worktree", "add", "-b", "linked-branch", "-q", worktreeDir)
+
+	status := gitInfo(worktreeDir)
+	assert.Equal(t, "linked-branch", status.branch)
+	assert.False(t, status.detached)
+	assert.False(t, status.dirty)
+
+	data := &types.Payload{
+		Cwd:       worktreeDir,
+		Workspace: types.WorkspaceInfo{CurrentDir: worktreeDir},
+	}
+	assert.Contains(t, gitBase(testCfg, data), IconGitBranch+" linked-branch")
+}
+
 func TestContextColorThresholds(t *testing.T) {
 	tests := []struct {
 		name    string
