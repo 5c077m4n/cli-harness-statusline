@@ -2,6 +2,9 @@ package segments
 
 import (
 	"math"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
@@ -278,9 +281,92 @@ func TestGitNotAGitRepo(t *testing.T) {
 }
 
 func TestGitInfoNotAGitRepo(t *testing.T) {
-	branch, dirty := gitInfo(t.TempDir())
-	assert.Empty(t, branch)
-	assert.False(t, dirty)
+	status := gitInfo(t.TempDir())
+	assert.Empty(t, status.branch)
+	assert.False(t, status.detached)
+	assert.False(t, status.dirty)
+}
+
+func setupGitRepo(t *testing.T) string {
+	t.Helper()
+	dir := t.TempDir()
+	run := func(args ...string) string {
+		cmd := exec.Command("git", append([]string{"-C", dir}, args...)...)
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("git %v failed: %v: %s", args, err, string(out))
+		}
+		return string(out)
+	}
+	run("init", "-q")
+	run("config", "user.email", "test@test.com")
+	run("config", "user.name", "test")
+	if err := os.WriteFile(filepath.Join(dir, "a.txt"), []byte("hello"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	run("add", ".")
+	run("commit", "-qm", "init")
+	return dir
+}
+
+func TestGitInfoDetachedHead(t *testing.T) {
+	dir := setupGitRepo(t)
+	commitOut, err := exec.Command("git", "-C", dir, "rev-parse", "--short", "HEAD").Output()
+	if err != nil {
+		t.Fatal(err)
+	}
+	wantSha := strings.TrimSpace(string(commitOut))
+
+	run := func(args ...string) {
+		cmd := exec.Command("git", append([]string{"-C", dir}, args...)...)
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("git %v failed: %v: %s", args, err, string(out))
+		}
+	}
+	run("checkout", "-q", "--detach", "HEAD")
+
+	status := gitInfo(dir)
+	assert.Equal(t, wantSha, status.branch)
+	assert.True(t, status.detached)
+	assert.False(t, status.dirty)
+}
+
+func TestGitInfoDetachedHeadDirty(t *testing.T) {
+	dir := setupGitRepo(t)
+
+	run := func(args ...string) {
+		cmd := exec.Command("git", append([]string{"-C", dir}, args...)...)
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("git %v failed: %v: %s", args, err, string(out))
+		}
+	}
+	run("checkout", "-q", "--detach", "HEAD")
+	if err := os.WriteFile(filepath.Join(dir, "b.txt"), []byte("world"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	status := gitInfo(dir)
+	assert.NotEmpty(t, status.branch)
+	assert.True(t, status.detached)
+	assert.True(t, status.dirty)
+}
+
+func TestGitSegmentDetachedHead(t *testing.T) {
+	dir := setupGitRepo(t)
+
+	run := func(args ...string) {
+		cmd := exec.Command("git", append([]string{"-C", dir}, args...)...)
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("git %v failed: %v: %s", args, err, string(out))
+		}
+	}
+	run("checkout", "-q", "--detach", "HEAD")
+
+	data := &types.Payload{Cwd: dir, Workspace: types.WorkspaceInfo{CurrentDir: dir}}
+	assert.Contains(t, git(testCfg, data), IconGitBranch+" @")
 }
 
 func TestContextColorThresholds(t *testing.T) {

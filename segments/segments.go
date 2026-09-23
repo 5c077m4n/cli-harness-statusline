@@ -33,7 +33,27 @@ func TermSep() string {
 	return colorGray.Sprint(" | ")
 }
 
-func gitInfo(directory string) (string, bool) {
+type gitStatus struct {
+	branch   string
+	detached bool
+	dirty    bool
+}
+
+func gitShortSha(directory string) string {
+	cmd := exec.Command("git", "-C", directory, "rev-parse", "--short", "HEAD")
+	shaBytes, err := cmd.Output()
+	if err != nil {
+		slog.Warn(
+			"gitShortSha: git command failed",
+			slog.String("dir", directory),
+			slog.Any("error", err),
+		)
+		return ""
+	}
+	return strings.TrimSpace(string(shaBytes))
+}
+
+func gitInfo(directory string) gitStatus {
 	cmd := exec.Command("git", "-C", directory, "status", "--branch", "--porcelain")
 	outputBytes, err := cmd.Output()
 	if err != nil {
@@ -42,23 +62,29 @@ func gitInfo(directory string) (string, bool) {
 			slog.String("dir", directory),
 			slog.Any("error", err),
 		)
-		return "", false
+		return gitStatus{}
 	}
 
 	output := strings.TrimSpace(string(outputBytes))
 	if output == "" {
-		return "", false
+		return gitStatus{}
 	}
 
 	lines := strings.SplitN(output, "\n", 2)
 	header := lines[0]
 	if !strings.HasPrefix(header, "## ") {
-		return "", false
+		return gitStatus{}
 	}
 
 	header = strings.TrimPrefix(header, "## ")
+	dirty := len(lines) > 1 && lines[1] != ""
+
 	if header == "HEAD (no branch)" {
-		return "", false
+		sha := gitShortSha(directory)
+		if sha == "" {
+			return gitStatus{}
+		}
+		return gitStatus{branch: sha, detached: true, dirty: dirty}
 	}
 
 	if idx := strings.Index(header, "..."); idx != -1 {
@@ -67,11 +93,10 @@ func gitInfo(directory string) (string, bool) {
 
 	match := branchRegex.FindStringSubmatch(header)
 	if len(match) < 2 {
-		return "", false
+		return gitStatus{}
 	}
 
-	dirty := len(lines) > 1 && lines[1] != ""
-	return match[1], dirty
+	return gitStatus{branch: match[1], dirty: dirty}
 }
 
 func model(cfg *config.Config, data *types.Payload) string {
@@ -124,17 +149,26 @@ func git(cfg *config.Config, data *types.Payload) string {
 		directory = "."
 	}
 
-	branch, dirty := gitInfo(directory)
-	if branch == "" {
+	info := gitInfo(directory)
+	if info.branch == "" {
 		return ""
 	}
 
+	branch := info.branch
 	if !cfg.Segments.Git.DisableTruncate {
 		branch = truncate(branch, defaultTruncateLength)
 	}
 
+	if info.detached {
+		segment := colorYellow.Sprintf("%s @%s", IconGitBranch, branch)
+		if info.dirty {
+			segment += colorYellow.Sprint("*")
+		}
+		return segment
+	}
+
 	segment := colorMagenta.Sprintf("%s %s", IconGitBranch, branch)
-	if dirty {
+	if info.dirty {
 		segment += colorYellow.Sprint("*")
 	}
 

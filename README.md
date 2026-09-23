@@ -26,7 +26,7 @@ All fields are optional — any omitted field falls back to its default.
   "segments": {
     "model": { "disable": false }, // Show current AI model name
     "folder": { "disable": false, "disableTruncate": false }, // Show working directory name (truncated at 24 chars unless disabled)
-    "git": { "disable": false, "disableTruncate": false }, // Show git branch and dirty state (branch truncated at 24 chars unless disabled)
+    "git": { "disable": false, "disableTruncate": false }, // Show git branch and dirty state; during detached HEAD shows @<short sha> (branch truncated at 24 chars unless disabled)
     "worktree": { "disable": false }, // Show git worktree name
     "pr": { "disable": false }, // Show PR number and review state
     "agent": { "disable": false }, // Show active agent name
