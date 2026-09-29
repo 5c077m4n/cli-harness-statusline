@@ -157,7 +157,7 @@ func gitBase(cfg *config.Config, data *types.Payload) string {
 	}
 
 	if info.detached {
-		segment := colorYellow.Sprintf("%s @%s", IconGitBranch, branch)
+		segment := colorYellow.Sprintf("%s HEAD (%s)", IconGitBranch, branch)
 		if info.dirty {
 			segment += colorYellow.Sprint("*")
 		}

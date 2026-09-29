@@ -345,7 +345,7 @@ func TestGitSegmentDetachedHead(t *testing.T) {
 	runGit(t, dir, "checkout", "-q", "--detach", "HEAD")
 
 	data := &types.Payload{Cwd: dir, Workspace: types.WorkspaceInfo{CurrentDir: dir}}
-	assert.Contains(t, gitBase(testCfg, data), IconGitBranch+" @")
+	assert.Contains(t, gitBase(testCfg, data), IconGitBranch+" HEAD (")
 }
 
 func TestGitInfoLinkedWorktree(t *testing.T) {
