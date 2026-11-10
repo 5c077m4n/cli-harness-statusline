@@ -675,7 +675,7 @@ func TestRateLimit(t *testing.T) {
 			data: types.Payload{RateLimits: &types.RateLimits{
 				FiveHour:   &types.RateLimitWindow{UsedPercentage: 10},
 				SevenDay:   &types.RateLimitWindow{UsedPercentage: 50},
-				SpendLimit: &types.RateLimitWindow{UsedPercentage: 75},
+				SpendLimit: &types.SpendLimitWindow{RateLimitWindow: types.RateLimitWindow{UsedPercentage: 75}},
 			}},
 			want: IconRateLimit + " 5h:10% 7d:50% $:75%",
 		},
