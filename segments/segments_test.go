@@ -686,10 +686,6 @@ func TestRateLimit(t *testing.T) {
 	}
 }
 
-func testPtr(v float64) *float64 {
-	return &v
-}
-
 func TestSpendLimit(t *testing.T) {
 	tests := []struct {
 		name string
@@ -704,7 +700,7 @@ func TestSpendLimit(t *testing.T) {
 		{
 			name: "percentage only",
 			data: types.Payload{RateLimits: &types.RateLimits{
-				SpendLimit: &types.SpendLimitWindow{RateLimitWindow: types.RateLimitWindow{UsedPercentage: 62.8}},
+				SpendLimit: &types.SpendLimitWindow{UsedPercentage: 62.8},
 			}},
 			want: IconSpendLimit + " 63%",
 		},
@@ -712,9 +708,9 @@ func TestSpendLimit(t *testing.T) {
 			name: "with usd",
 			data: types.Payload{RateLimits: &types.RateLimits{
 				SpendLimit: &types.SpendLimitWindow{
-					RateLimitWindow: types.RateLimitWindow{UsedPercentage: 62.8},
-					UsedUSD:         testPtr(314.12),
-					LimitUSD:        testPtr(500.0),
+					UsedPercentage: 62.8,
+					UsedUSD:        new(314.12),
+					LimitUSD:       new(500.0),
 				},
 			}},
 			want: IconSpendLimit + " 63% $314.12/$500.00",
@@ -783,7 +779,12 @@ func TestEdgeCases(t *testing.T) {
 	t.Run("model with param summary", func(t *testing.T) {
 		assert.Contains(
 			t,
-			model(testCfg, &types.Payload{Model: types.ModelInfo{DisplayName: "Opus", ParamSummary: "(Thinking)"}}),
+			model(
+				testCfg,
+				&types.Payload{
+					Model: types.ModelInfo{DisplayName: "Opus", ParamSummary: "(Thinking)"},
+				},
+			),
 			"Opus (Thinking)",
 		)
 	})
