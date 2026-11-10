@@ -387,13 +387,25 @@ func rateLimit(cfg *config.Config, data *types.Payload) string {
 	if rl := data.RateLimits.SevenDay; rl != nil {
 		parts = append(parts, fmt.Sprintf("7d:%.0f%%", rl.UsedPercentage))
 	}
-	if rl := data.RateLimits.SpendLimit; rl != nil {
-		parts = append(parts, fmt.Sprintf("$:%.0f%%", rl.UsedPercentage))
-	}
 	if len(parts) == 0 {
 		return ""
 	}
 	return colorDim.Sprintf("%s %s", IconRateLimit, strings.Join(parts, " "))
+}
+
+func spendLimit(cfg *config.Config, data *types.Payload) string {
+	if cfg.Segments.SpendLimit.Disable {
+		return ""
+	}
+	if data.RateLimits == nil || data.RateLimits.SpendLimit == nil {
+		return ""
+	}
+	rl := data.RateLimits.SpendLimit
+	segment := colorDim.Sprintf("%s %.0f%%", IconSpendLimit, rl.UsedPercentage)
+	if rl.UsedUSD != nil && rl.LimitUSD != nil {
+		segment += colorDim.Sprintf(" $%.2f/$%.2f", *rl.UsedUSD, *rl.LimitUSD)
+	}
+	return segment
 }
 
 func token(cfg *config.Config, data *types.Payload) string {
@@ -452,6 +464,7 @@ func Render(cfg *config.Config, data *types.Payload) string {
 		effort,
 		thinking,
 		rateLimit,
+		spendLimit,
 	}
 
 	nonEmpty := make([]string, 0, len(segmentFuncs))
