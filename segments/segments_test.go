@@ -740,6 +740,14 @@ func TestCache(t *testing.T) {
 }
 
 func TestEdgeCases(t *testing.T) {
+	t.Run("model with param summary", func(t *testing.T) {
+		assert.Contains(
+			t,
+			model(testCfg, &types.Payload{Model: types.ModelInfo{DisplayName: "Opus", ParamSummary: "(Thinking)"}}),
+			"Opus (Thinking)",
+		)
+	})
+
 	t.Run("model with empty display name and max mode", func(t *testing.T) {
 		assert.Equal(
 			t,

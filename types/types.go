@@ -16,9 +16,10 @@ var ErrSTDINRead = errors.New("STDIN read failed")
 
 type (
 	ModelInfo struct {
-		ID          string `json:"id"`
-		DisplayName string `json:"display_name"`
-		MaxMode     bool   `json:"max_mode"`
+		ID           string `json:"id"`
+		DisplayName  string `json:"display_name"`
+		ParamSummary string `json:"param_summary,omitzero"`
+		MaxMode      bool   `json:"max_mode"`
 	}
 	RepoInfo struct {
 		Host  string `json:"host"`
@@ -126,6 +127,7 @@ type (
 		SessionName    string            `json:"session_name"`
 		PromptID       string            `json:"prompt_id"`
 		TranscriptPath string            `json:"transcript_path"`
+		RenderWidth    int               `json:"render_width_chars,omitzero"`
 		Version        string            `json:"version"`
 		Autorun        bool              `json:"autorun"`
 		FastMode       bool              `json:"fast_mode"`

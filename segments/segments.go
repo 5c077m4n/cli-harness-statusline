@@ -107,6 +107,9 @@ func model(cfg *config.Config, data *types.Payload) string {
 	if name == "" {
 		name = "unknown"
 	}
+	if data.Model.ParamSummary != "" {
+		name = fmt.Sprintf("%s %s", name, data.Model.ParamSummary)
+	}
 	return colorBlue.Add(color.Bold).Sprintf("%s %s", IconModel, name)
 }
 
