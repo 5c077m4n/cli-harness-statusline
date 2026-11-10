@@ -73,24 +73,40 @@ type (
 		UsedPercentage float64 `json:"used_percentage"`
 		ResetsAt       float64 `json:"resets_at"`
 	}
+	SpendLimitWindow struct {
+		RateLimitWindow
+		UsedUSD  *float64 `json:"used_usd,omitzero"`
+		LimitUSD *float64 `json:"limit_usd,omitzero"`
+		Period   *string  `json:"period,omitzero"`
+	}
 	RateLimits struct {
-		FiveHour   *RateLimitWindow `json:"five_hour,omitzero"`
-		SevenDay   *RateLimitWindow `json:"seven_day,omitzero"`
-		SpendLimit *RateLimitWindow `json:"spend_limit,omitzero"`
+		FiveHour   *RateLimitWindow  `json:"five_hour,omitzero"`
+		SevenDay   *RateLimitWindow  `json:"seven_day,omitzero"`
+		SpendLimit *SpendLimitWindow `json:"spend_limit,omitzero"`
 	}
 	PromptCacheInfo struct {
-		Warm                bool     `json:"warm"`
-		CachingObserved     bool     `json:"caching_observed"`
-		TTL                 string   `json:"ttl"`
-		ExpiresAt           *float64 `json:"expires_at"`
-		Requests            int      `json:"requests"`
-		Misses              int      `json:"misses"`
-		ExpectedRebuilds    int      `json:"expected_rebuilds"`
-		HitRatio            *float64 `json:"hit_ratio"`
-		CacheWriteTokens    int64    `json:"cache_write_tokens"`
-		MissRecacheTokens   int64    `json:"miss_recache_tokens"`
-		LastMissAt          *float64 `json:"last_miss_at"`
-		RecacheTokensIfCold *float64 `json:"recache_tokens_if_cold"`
+		Warm                bool             `json:"warm"`
+		CachingObserved     bool             `json:"caching_observed"`
+		TTL                 string           `json:"ttl"`
+		ExpiresAt           *float64         `json:"expires_at"`
+		Requests            int              `json:"requests"`
+		Misses              int              `json:"misses"`
+		ExpectedRebuilds    int              `json:"expected_rebuilds"`
+		HitRatio            *float64         `json:"hit_ratio"`
+		CacheWriteTokens    int64            `json:"cache_write_tokens"`
+		MissRecacheTokens   int64            `json:"miss_recache_tokens"`
+		LastMissAt          *float64         `json:"last_miss_at"`
+		RecacheTokensIfCold *float64         `json:"recache_tokens_if_cold"`
+		LastMissCause       *MissCauseInfo   `json:"last_miss_cause,omitzero"`
+		MissCauses          *MissCauseCounts `json:"miss_causes,omitzero"`
+	}
+	MissCauseInfo struct {
+		Causes       []string `json:"causes,omitzero"`
+		ToolsAdded   int      `json:"tools_added"`
+		ToolsRemoved int      `json:"tools_removed"`
+	}
+	MissCauseCounts struct {
+		ToolsChanged int `json:"tools_changed"`
 	}
 	OutputStyleInfo struct {
 		Name string `json:"name"`
