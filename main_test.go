@@ -136,7 +136,8 @@ func TestMainFullPayload(t *testing.T) {
 	assert.Contains(t, output, segments.IconFastMode+" fast")
 	assert.Contains(t, output, segments.IconEffort+" high")
 	assert.Contains(t, output, segments.IconThinking+" think")
-	assert.Contains(t, output, segments.IconRateLimit+" 5h:24% 7d:41% $:63%")
+	assert.Contains(t, output, segments.IconRateLimit+" 5h:24% 7d:41%")
+	assert.Contains(t, output, segments.IconSpendLimit+" 63%")
 }
 
 func TestMainIntegration(t *testing.T) {

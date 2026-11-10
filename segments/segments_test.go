@@ -671,18 +671,58 @@ func TestRateLimit(t *testing.T) {
 			want: IconRateLimit + " 5h:24%",
 		},
 		{
-			name: "with all windows",
+			name: "with all rate limit windows",
 			data: types.Payload{RateLimits: &types.RateLimits{
-				FiveHour:   &types.RateLimitWindow{UsedPercentage: 10},
-				SevenDay:   &types.RateLimitWindow{UsedPercentage: 50},
-				SpendLimit: &types.SpendLimitWindow{RateLimitWindow: types.RateLimitWindow{UsedPercentage: 75}},
+				FiveHour: &types.RateLimitWindow{UsedPercentage: 10},
+				SevenDay: &types.RateLimitWindow{UsedPercentage: 50},
 			}},
-			want: IconRateLimit + " 5h:10% 7d:50% $:75%",
+			want: IconRateLimit + " 5h:10% 7d:50%",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equal(t, tt.want, rateLimit(testCfg, &tt.data))
+		})
+	}
+}
+
+func testPtr(v float64) *float64 {
+	return &v
+}
+
+func TestSpendLimit(t *testing.T) {
+	tests := []struct {
+		name string
+		data types.Payload
+		want string
+	}{
+		{
+			name: "absent",
+			data: types.Payload{},
+			want: "",
+		},
+		{
+			name: "percentage only",
+			data: types.Payload{RateLimits: &types.RateLimits{
+				SpendLimit: &types.SpendLimitWindow{RateLimitWindow: types.RateLimitWindow{UsedPercentage: 62.8}},
+			}},
+			want: IconSpendLimit + " 63%",
+		},
+		{
+			name: "with usd",
+			data: types.Payload{RateLimits: &types.RateLimits{
+				SpendLimit: &types.SpendLimitWindow{
+					RateLimitWindow: types.RateLimitWindow{UsedPercentage: 62.8},
+					UsedUSD:         testPtr(314.12),
+					LimitUSD:        testPtr(500.0),
+				},
+			}},
+			want: IconSpendLimit + " 63% $314.12/$500.00",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, spendLimit(testCfg, &tt.data))
 		})
 	}
 }

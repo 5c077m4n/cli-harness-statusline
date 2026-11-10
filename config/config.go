@@ -19,25 +19,26 @@ type TruncateConfig struct {
 	DisableTruncate bool `json:"disableTruncate"`
 }
 type SegmentsConfig struct {
-	Model     SegmentConfig   `json:"model"`
-	Folder    TruncateConfig  `json:"folder"`
-	Git       TruncateConfig  `json:"git"`
-	Worktree  SegmentConfig `json:"worktree"`
-	PR        SegmentConfig `json:"pr"`
-	Agent     SegmentConfig `json:"agent"`
-	Session   SegmentConfig `json:"session"`
-	Context   SegmentConfig `json:"context"`
-	Cost      SegmentConfig `json:"cost"`
-	Token     SegmentConfig `json:"token"`
-	Cache     SegmentConfig `json:"cache"`
-	Vim       SegmentConfig `json:"vim"`
-	Autorun   SegmentConfig `json:"autorun"`
-	Max       SegmentConfig `json:"max"`
-	FastMode  SegmentConfig `json:"fastMode"`
-	Effort    SegmentConfig `json:"effort"`
-	Thinking  SegmentConfig `json:"thinking"`
-	RateLimit SegmentConfig `json:"rateLimit"`
-	Exceeds   SegmentConfig `json:"exceeds"`
+	Model      SegmentConfig  `json:"model"`
+	Folder     TruncateConfig `json:"folder"`
+	Git        TruncateConfig `json:"git"`
+	Worktree   SegmentConfig  `json:"worktree"`
+	PR         SegmentConfig  `json:"pr"`
+	Agent      SegmentConfig  `json:"agent"`
+	Session    SegmentConfig  `json:"session"`
+	Context    SegmentConfig  `json:"context"`
+	Cost       SegmentConfig  `json:"cost"`
+	Token      SegmentConfig  `json:"token"`
+	Cache      SegmentConfig  `json:"cache"`
+	Vim        SegmentConfig  `json:"vim"`
+	Autorun    SegmentConfig  `json:"autorun"`
+	Max        SegmentConfig  `json:"max"`
+	FastMode   SegmentConfig  `json:"fastMode"`
+	Effort     SegmentConfig  `json:"effort"`
+	Thinking   SegmentConfig  `json:"thinking"`
+	RateLimit  SegmentConfig  `json:"rateLimit"`
+	SpendLimit SegmentConfig  `json:"spendLimit"`
+	Exceeds    SegmentConfig  `json:"exceeds"`
 }
 type Padding struct {
 	Top    int `json:"top"`
