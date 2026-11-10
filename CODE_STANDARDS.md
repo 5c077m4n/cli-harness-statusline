@@ -4,7 +4,7 @@ Standards inferred from the current state of the repository. Everything here is 
 
 ## Layout
 
-- Single Go module (`go 1.27`), one package per concern: `main` (entry), `host/` (runtime/host detection with per-OS files), `segments/` (statusline segment rendering), `types/` (input parsing and shared types), `config/` (config loading).
+- Single Go module (`go 1.27.3`), one package per concern: `main` (entry), `host/` (runtime/host detection with per-OS files), `segments/` (statusline segment rendering), `types/` (input parsing and shared types), `config/` (config loading).
 - Configuration is a single JSON file (`~/.config/cli-harness-statusline/config.json`); every field is optional with a documented default.
 
 ## Pre-commit gates
