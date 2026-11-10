@@ -1,3 +1,4 @@
+// Package segments printing
 package segments
 
 import (
