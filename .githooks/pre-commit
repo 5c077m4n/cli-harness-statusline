@@ -8,3 +8,5 @@ golangci-lint run ./... || exit 1
 go build -o /dev/null . || exit 1
 
 gitleaks git --verbose
+
+zizmor --no-online-audits . || exit 1
