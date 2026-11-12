@@ -1,0 +1,6 @@
+rules:
+  unpinned-uses:
+    config:
+      # Exact version tags in the workflows + actions.lock pinning the commits.
+      policies:
+        "*": "ref-pin"
